@@ -1,11 +1,8 @@
 import React from "react";
-
-import Cta from "@/app/components/Cta";
-import Info from "@/app/components/InfoSection";
 import { dataAttr } from "@/sanity/lib/utils";
 
 type BlocksType = {
-	[key: string]: React.FC<any>;
+	[key: string]: React.FC<BlockProps>;
 };
 
 type BlockType = {
@@ -20,10 +17,7 @@ type BlockProps = {
 	pageType: string;
 };
 
-const Blocks: BlocksType = {
-	callToAction: Cta,
-	infoSection: Info,
-};
+const Blocks: BlocksType = {};
 
 /**
  * Used by the <PageBuilder>, this component renders a the component that matches the block type.
