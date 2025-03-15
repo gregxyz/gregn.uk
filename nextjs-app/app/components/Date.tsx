@@ -1,17 +1,17 @@
 import { format } from "date-fns";
 
 export default function DateComponent({
-  dateString,
+	dateString,
 }: {
-  dateString: string | undefined;
+	dateString: string | undefined;
 }) {
-  if (!dateString) {
-    return null;
-  }
+	if (!dateString) {
+		return null;
+	}
 
-  return (
-    <time dateTime={dateString}>
-      {format(new Date(dateString), "LLLL	d, yyyy")}
-    </time>
-  );
+	return (
+		<time dateTime={dateString}>
+			{format(new Date(dateString), "LLLL	d, yyyy")}
+		</time>
+	);
 }
