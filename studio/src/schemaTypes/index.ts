@@ -1,14 +1,16 @@
-import { page } from "./documents/page";
-import { settings } from "./singletons/settings";
-import { link } from "./objects/link";
+import * as documents from "./documents";
+import * as singletons from "./singletons";
+import * as objects from "./objects";
+import * as blocks from "./blocks";
 
-// Export an array of all the schema types.  This is used in the Sanity Studio configuration. https://www.sanity.io/docs/schema-types
+const allDocuments = Object.values(documents);
+const allSingletons = Object.values(singletons);
+const allObjects = Object.values(objects);
+const allBlocks = Object.values(blocks);
 
 export const schemaTypes = [
-	// Singletons
-	settings,
-	// Documents
-	page,
-	// Objects
-	link,
+	...allDocuments,
+	...allSingletons,
+	...allObjects,
+	...allBlocks,
 ];

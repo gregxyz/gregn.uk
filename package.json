@@ -5,7 +5,6 @@
 		"dev": "pnpm run -r dev",
 		"dev:next": "pnpm --filter nextjs-app run dev",
 		"dev:studio": "pnpm --filter studio run dev",
-		"import-sample-data": "cd studio && pnpm exec sanity dataset import sample-data.tar.gz --replace",
 		"format": "pnpm exec biome format . --write",
 		"lint": "pnpm exec biome lint . --apply"
 	},

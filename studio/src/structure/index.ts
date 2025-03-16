@@ -1,4 +1,4 @@
-import { CogIcon } from "@sanity/icons";
+import { CogIcon, HomeIcon } from "@sanity/icons";
 import type { StructureBuilder, StructureResolver } from "sanity/structure";
 import pluralize from "pluralize-esm";
 
@@ -8,12 +8,16 @@ import pluralize from "pluralize-esm";
  * Learn more: https://www.sanity.io/docs/structure-builder-introduction
  */
 
-const DISABLED_TYPES = ["settings", "assist.instruction.context"];
+const DISABLED_TYPES = ["home", "settings", "assist.instruction.context"];
 
 export const structure: StructureResolver = (S: StructureBuilder) =>
 	S.list()
 		.title("Website Content")
 		.items([
+			S.listItem()
+				.title("Home")
+				.child(S.document().schemaType("home").documentId("homePage"))
+				.icon(HomeIcon),
 			...S.documentTypeListItems()
 				// Remove the "assist.instruction.context" and "settings" content  from the list of content types
 				.filter((listItem: any) => !DISABLED_TYPES.includes(listItem.getId()))

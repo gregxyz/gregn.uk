@@ -98,10 +98,8 @@ export const settings = defineType({
 		}),
 	],
 	preview: {
-		prepare() {
-			return {
-				title: "Settings",
-			};
+		select: {
+			title: "title",
 		},
 	},
 });
