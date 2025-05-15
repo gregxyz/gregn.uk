@@ -1,4 +1,5 @@
 import { defineQuery } from "next-sanity";
+import { pageStub } from "./queryStubs";
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
 
@@ -27,29 +28,15 @@ const linkFields = /* groq */ `
       }
 `;
 
+export const getHomeQuery = defineQuery(`
+  *[_type == 'home'][0]{
+    ${pageStub}
+  }
+`);
+
 export const getPageQuery = defineQuery(`
   *[_type == 'page' && slug.current == $slug][0]{
-    _id,
-    _type,
-    name,
-    slug,
-    heading,
-    subheading,
-    "pageBuilder": pageBuilder[]{
-      ...,
-      _type == "callToAction" => {
-        ${linkFields},
-      },
-      _type == "infoSection" => {
-        content[]{
-          ...,
-          markDefs[]{
-            ...,
-            ${linkReference}
-          }
-        }
-      },
-    },
+    ${pageStub}
   }
 `);
 

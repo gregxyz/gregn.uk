@@ -1,0 +1,3 @@
+@utility bg-grid {
+  @apply bg-white bg-[linear-gradient(to_right,rgba(200,200,200,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(200,200,200,0.2)_1px,transparent_1px)] bg-[length:100px_100px]
+}
