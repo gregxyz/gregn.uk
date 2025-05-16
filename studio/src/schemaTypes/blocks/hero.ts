@@ -49,5 +49,11 @@ export const hero = defineField({
     select: {
       title: "title",
     },
+    prepare({ title }) {
+      return {
+        title: title,
+        subtitle: "Hero",
+      };
+    },
   },
 });
