@@ -3,6 +3,7 @@
 import type { Hero as HeroProps } from "@/sanity.types";
 import { ArrowElbowRightDown } from "@phosphor-icons/react";
 import Image from "next/image";
+import RichText from "../common/RichText";
 
 function Hero({ block }: { block: HeroProps }) {
   return (
@@ -14,13 +15,7 @@ function Hero({ block }: { block: HeroProps }) {
           </h1>
         </div>
         <div className="max-w-[400px] md:ml-auto md:place-self-end md:text-right xl:max-w-[30vw]">
-          {block.description && (
-            <p className="text-fluid-sm">
-              A Senior Developer based in London. I'm passionate about REST
-              API's, Graph QL, Headless CMS & the latest in Javascript while
-              maintaining a strong emphasis on performance & SEO.
-            </p>
-          )}
+          {block.description && <RichText content={block.description} />}
           {!!block.links && (
             <nav>
               <hr className="mt-2 mb-1 w-7 md:ml-auto" />
