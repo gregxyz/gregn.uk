@@ -1,3 +1,11 @@
 @utility bg-grid {
   @apply bg-white bg-[linear-gradient(to_right,rgba(200,200,200,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(200,200,200,0.2)_1px,transparent_1px)] bg-[length:100px_100px]
 }
+
+@utility link-hover {
+  @apply relative before:h-[1px] before:w-full before:bg-white before:absolute before:bottom-[-1px] before:right-0 hover:before:w-0 before:transition-all before:duration-200;
+}
+
+@utility link-hover-reverse {
+  @apply relative before:h-[1px] before:w-0 before:bg-white before:absolute before:bottom-[-1px] before:left-0 hover:before:w-full before:transition-all before:duration-200;
+}

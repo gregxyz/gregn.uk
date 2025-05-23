@@ -5,5 +5,11 @@ export const pageStub = `
   slug,
   "pageBuilder": pageBuilder[]{
     ...,
+    _type == "featuredProject" => {
+      ...,
+      project-> {
+       ...,
+      },
+    },
   },
 `;

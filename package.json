@@ -1,28 +1,29 @@
 {
-	"name": "gregnuk",
-	"description": "Personal portfolio site for Greg",
-	"scripts": {
-		"dev": "pnpm run -r dev",
-		"dev:next": "pnpm --filter nextjs-app run dev",
-		"dev:studio": "pnpm --filter studio run dev",
-		"format": "pnpm exec biome format . --write",
-		"lint": "pnpm exec biome lint . --apply"
-	},
-	"keywords": [
-		"Sanity",
-		"Next.js",
-		"Headless CMS",
-		"Visual Editing",
-		"Live Content API (LCAPI)",
-		"Real-time"
-	],
-	"bugs": {
-		"url": "https://github.com/sanity-io/sanity-template-nextjs-clean/issues"
-	},
-	"homepage": "https://github.com/sanity-io/sanity-template-nextjs-clean#readme",
-	"workspaces": ["studio", "nextjs-app"],
-	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
-		"npm-run-all": "^4.1.5"
-	}
+  "name": "gregnuk",
+  "description": "Personal portfolio site for Greg",
+  "scripts": {
+    "dev": "pnpm run -r dev",
+    "dev:next": "pnpm --filter nextjs-app run dev",
+    "dev:studio": "pnpm --filter studio run dev",
+    "format": "pnpm exec biome format . --write",
+    "lint": "pnpm exec biome lint . --apply",
+    "typegen": "pnpm --filter=studio run extract-types && pnpm --filter=nextjs-app run typegen"
+  },
+  "keywords": [
+    "Sanity",
+    "Next.js",
+    "Headless CMS",
+    "Visual Editing",
+    "Live Content API (LCAPI)",
+    "Real-time"
+  ],
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity-template-nextjs-clean/issues"
+  },
+  "homepage": "https://github.com/sanity-io/sanity-template-nextjs-clean#readme",
+  "workspaces": ["studio", "nextjs-app"],
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "npm-run-all": "^4.1.5"
+  }
 }

@@ -39,28 +39,6 @@ export type SanityImageDimensions = {
   aspectRatio?: number;
 };
 
-export type SanityFileAsset = {
-  _id: string;
-  _type: "sanity.fileAsset";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
-  title?: string;
-  description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  source?: SanityAssetSourceData;
-};
-
 export type Geopoint = {
   _type: "geopoint";
   lat?: number;
@@ -70,8 +48,8 @@ export type Geopoint = {
 
 export type Hero = {
   _type: "hero";
-  title?: string;
-  titleLarge?: string;
+  title: string;
+  titleLarge: string;
   description?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -96,6 +74,16 @@ export type Hero = {
     _type: "link";
     _key: string;
   }>;
+};
+
+export type FeaturedProject = {
+  _type: "featuredProject";
+  project: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "project";
+  };
 };
 
 export type RichText = Array<{
@@ -131,6 +119,8 @@ export type Link = {
 };
 
 export type ContentBlocks = Array<{
+  _key: string;
+} & FeaturedProject | {
   _key: string;
 } & Hero>;
 
@@ -172,6 +162,77 @@ export type Settings = {
     metadataBase?: string;
     _type: "image";
   };
+};
+
+export type Project = {
+  _id: string;
+  _type: "project";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  tagline: string;
+  secondaryTagline?: string;
+  tools: Array<string>;
+  previewImage: {
+    asset: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    attribution?: string;
+    _type: "image";
+  };
+  heroImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    attribution?: string;
+    _type: "image";
+  };
+  video?: {
+    file?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+      };
+      _type: "file";
+    };
+    attribution?: string;
+  };
+};
+
+export type SanityFileAsset = {
+  _id: string;
+  _type: "sanity.fileAsset";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  originalFilename?: string;
+  label?: string;
+  title?: string;
+  description?: string;
+  altText?: string;
+  sha1hash?: string;
+  extension?: string;
+  mimeType?: string;
+  size?: number;
+  assetId?: string;
+  uploadId?: string;
+  path?: string;
+  url?: string;
+  source?: SanityAssetSourceData;
 };
 
 export type SanityImageCrop = {
@@ -379,7 +440,7 @@ export type SanityAssistSchemaTypeField = {
   } & SanityAssistInstruction>;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Hero | RichText | Link | ContentBlocks | Settings | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Page | Slug | Home | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | Geopoint | Hero | FeaturedProject | RichText | Link | ContentBlocks | Settings | Project | SanityFileAsset | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Page | Slug | Home | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
@@ -424,7 +485,7 @@ export type SettingsQueryResult = {
   };
 } | null;
 // Variable: getHomeQuery
-// Query: *[_type == 'home'][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,  },  }
+// Query: *[_type == 'home'][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "featuredProject" => {      ...,      project-> {       ...,      },    },  },  }
 export type GetHomeQueryResult = {
   _id: string;
   _type: "home";
@@ -432,9 +493,60 @@ export type GetHomeQueryResult = {
   slug: null;
   pageBuilder: Array<{
     _key: string;
+    _type: "featuredProject";
+    project: {
+      _id: string;
+      _type: "project";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      title: string;
+      slug: Slug;
+      tagline: string;
+      secondaryTagline?: string;
+      tools: Array<string>;
+      previewImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        attribution?: string;
+        _type: "image";
+      };
+      heroImage?: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        attribution?: string;
+        _type: "image";
+      };
+      video?: {
+        file?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+          };
+          _type: "file";
+        };
+        attribution?: string;
+      };
+    };
+  } | {
+    _key: string;
     _type: "hero";
-    title?: string;
-    titleLarge?: string;
+    title: string;
+    titleLarge: string;
     description?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -462,7 +574,7 @@ export type GetHomeQueryResult = {
   }> | null;
 } | null;
 // Variable: getPageQuery
-// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,  },  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "featuredProject" => {      ...,      project-> {       ...,      },    },  },  }
 export type GetPageQueryResult = {
   _id: string;
   _type: "page";
@@ -500,8 +612,8 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"settings\"][0]": SettingsQueryResult;
-    "\n  *[_type == 'home'][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n  },\n\n  }\n": GetHomeQueryResult;
-    "\n  *[_type == 'page' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n  },\n\n  }\n": GetPageQueryResult;
+    "\n  *[_type == 'home'][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n      },\n    },\n  },\n\n  }\n": GetHomeQueryResult;
+    "\n  *[_type == 'page' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n      },\n    },\n  },\n\n  }\n": GetPageQueryResult;
     "\n  *[_type == \"page\" || _type == \"post\" && defined(slug.current)] | order(_type asc) {\n    \"slug\": slug.current,\n    _type,\n    _updatedAt,\n  }\n": SitemapDataResult;
     "\n  *[_type == \"post\" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": AllPostsQueryResult;
     "\n  *[_type == \"post\" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": MorePostsQueryResult;

@@ -2,9 +2,9 @@
   "name": "nextjs-app",
   "private": true,
   "scripts": {
-    "predev": "pnpm run typegen",
+    "predev": "pnpm -w run typegen",
     "dev": "next --turbo",
-    "prebuild": "pnpm run typegen",
+    "prebuild": "pnpm -w run typegen",
     "build": "next build",
     "start": "next start",
     "lint": "pnpm exec biome lint . --apply",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.7",
+    "@sanity/asset-utils": "^2.2.1",
     "@sanity/client": "^6.27.2",
     "@sanity/image-url": "^1.1.0",
     "@sanity/uuid": "^3.0.2",
