@@ -1,0 +1,24 @@
+import type { Project as ProjectProps } from "@/sanity.types";
+import ProjectCard from "../common/ProjectCard";
+
+interface Props {
+  block: {
+    projects: ProjectProps[];
+  }
+}
+
+function ProjectList({ block }: Props) {
+  return (
+    <section className="mt-15 md:mt-20">
+      <div className="grid grid-cols-6 gap-12 sm:px-10">
+        {block.projects?.map((project) => (
+          <div key={project._id} className="col-span-6 md:col-span-3 xl:col-span-2">
+            <ProjectCard card={project} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default ProjectList;

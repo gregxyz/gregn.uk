@@ -11,5 +11,11 @@ export const pageStub = `
        ...,
       },
     },
+    _type == "projectList" => {
+      ...,
+      projects[]-> {
+       ...,
+      },
+    },
   },
 `;
