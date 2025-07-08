@@ -185,6 +185,9 @@ export type Project = {
   _rev: string;
   title: string;
   slug: Slug;
+  client: string;
+  url: string;
+  services?: Array<string>;
   tagline: string;
   secondaryTagline?: string;
   tools: Array<string>;
@@ -224,6 +227,8 @@ export type Project = {
     };
     attribution?: string;
   };
+  description?: string;
+  prompt: RichText;
 };
 
 export type SanityFileAsset = {
@@ -515,6 +520,9 @@ export type GetHomeQueryResult = {
       _rev: string;
       title: string;
       slug: Slug;
+      client: string;
+      url: string;
+      services?: Array<string>;
       tagline: string;
       secondaryTagline?: string;
       tools: Array<string>;
@@ -554,6 +562,8 @@ export type GetHomeQueryResult = {
         };
         attribution?: string;
       };
+      description?: string;
+      prompt: RichText;
     };
   } | {
     _key: string;
@@ -595,6 +605,9 @@ export type GetHomeQueryResult = {
       _rev: string;
       title: string;
       slug: Slug;
+      client: string;
+      url: string;
+      services?: Array<string>;
       tagline: string;
       secondaryTagline?: string;
       tools: Array<string>;
@@ -634,6 +647,8 @@ export type GetHomeQueryResult = {
         };
         attribution?: string;
       };
+      description?: string;
+      prompt: RichText;
     }>;
   }> | null;
 } | null;
@@ -645,6 +660,61 @@ export type GetPageQueryResult = {
   name: string;
   slug: Slug;
   pageBuilder: null;
+} | null;
+// Variable: getProjectQuery
+// Query: *[_type == 'project' && slug.current == $slug][0]{    ...,  }
+export type GetProjectQueryResult = {
+  _id: string;
+  _type: "project";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  client: string;
+  url: string;
+  services?: Array<string>;
+  tagline: string;
+  secondaryTagline?: string;
+  tools: Array<string>;
+  previewImage: {
+    asset: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    attribution?: string;
+    _type: "image";
+  };
+  heroImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    attribution?: string;
+    _type: "image";
+  };
+  video?: {
+    file?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+      };
+      _type: "file";
+    };
+    attribution?: string;
+  };
+  description?: string;
+  prompt: RichText;
 } | null;
 // Variable: sitemapData
 // Query: *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {    "slug": slug.current,    _type,    _updatedAt,  }
@@ -670,6 +740,20 @@ export type PostPagesSlugsResult = Array<never>;
 export type PagesSlugsResult = Array<{
   slug: string;
 }>;
+// Variable: projectsSlugs
+// Query: *[_type == "project" && defined(slug.current)]  {"slug": slug.current}
+export type ProjectsSlugsResult = Array<{
+  slug: string;
+}>;
+// Variable: allSlugs
+// Query: *[(_type == "page" || _type == "project") && defined(slug.current)]  {"slug": slug.current, "_type": _type}
+export type AllSlugsResult = Array<{
+  slug: string;
+  _type: "page";
+} | {
+  slug: string;
+  _type: "project";
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -678,11 +762,14 @@ declare module "@sanity/client" {
     "*[_type == \"settings\"][0]": SettingsQueryResult;
     "\n  *[_type == 'home'][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n      },\n    },\n  },\n\n  }\n": GetHomeQueryResult;
     "\n  *[_type == 'page' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n      },\n    },\n  },\n\n  }\n": GetPageQueryResult;
+    "\n  *[_type == 'project' && slug.current == $slug][0]{\n    ...,\n  }\n": GetProjectQueryResult;
     "\n  *[_type == \"page\" || _type == \"post\" && defined(slug.current)] | order(_type asc) {\n    \"slug\": slug.current,\n    _type,\n    _updatedAt,\n  }\n": SitemapDataResult;
     "\n  *[_type == \"post\" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": AllPostsQueryResult;
     "\n  *[_type == \"post\" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": MorePostsQueryResult;
     "\n  *[_type == \"post\" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == \"link\" => {\n    \"page\": page->slug.current,\n    \"post\": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": PostQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PostPagesSlugsResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;
+    "\n  *[_type == \"project\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": ProjectsSlugsResult;
+    "\n  *[(_type == \"page\" || _type == \"project\") && defined(slug.current)]\n  {\"slug\": slug.current, \"_type\": _type}\n": AllSlugsResult;
   }
 }

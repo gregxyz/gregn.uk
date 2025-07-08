@@ -3,7 +3,7 @@ import { PortableText } from "next-sanity";
 
 function RichText({ content }: { content: RichTextType }) {
   return (
-    <div>
+    <div className="rich-text">
       <PortableText value={content} />
     </div>
   );

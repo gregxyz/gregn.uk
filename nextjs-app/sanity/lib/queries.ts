@@ -40,6 +40,12 @@ export const getPageQuery = defineQuery(`
   }
 `);
 
+export const getProjectQuery = defineQuery(`
+  *[_type == 'project' && slug.current == $slug][0]{
+    ...,
+  }
+`);
+
 export const sitemapData = defineQuery(`
   *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {
     "slug": slug.current,
@@ -81,4 +87,14 @@ export const postPagesSlugs = defineQuery(`
 export const pagesSlugs = defineQuery(`
   *[_type == "page" && defined(slug.current)]
   {"slug": slug.current}
+`);
+
+export const projectsSlugs = defineQuery(`
+  *[_type == "project" && defined(slug.current)]
+  {"slug": slug.current}
+`);
+
+export const allSlugs = defineQuery(`
+  *[(_type == "page" || _type == "project") && defined(slug.current)]
+  {"slug": slug.current, "_type": _type}
 `);

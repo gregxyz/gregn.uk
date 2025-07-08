@@ -1,10 +1,16 @@
-import { DocumentIcon, ImagesIcon, SearchIcon } from "@sanity/icons";
+import {
+  DocumentSheetIcon,
+  DocumentTextIcon,
+  ImagesIcon,
+  SearchIcon,
+} from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 import slugify from "slugify";
 
 const groups = [
-  { name: "page", title: "Page", icon: DocumentIcon, default: true },
+  { name: "page", title: "Page", icon: DocumentTextIcon, default: true },
   { name: "assets", title: "Assets", icon: ImagesIcon },
+  { name: "content", title: "Content", icon: DocumentSheetIcon },
   { name: "seo", title: "SEO", icon: SearchIcon },
 ];
 
@@ -37,6 +43,29 @@ export const project = defineType({
           }),
       },
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      group: "page",
+      name: "client",
+      type: "string",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      group: "page",
+      name: "url",
+      title: "URL",
+      type: "url",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      group: "page",
+      name: "services",
+      type: "array",
+      of: [
+        {
+          type: "string",
+        },
+      ],
     }),
     defineField({
       group: "page",
@@ -128,6 +157,30 @@ export const project = defineType({
         }),
       ],
     }),
+    defineField({
+      group: "content",
+      name: "description",
+      type: "text",
+      rows: 4,
+    }),
+    defineField({
+      group: "content",
+      name: "prompt",
+      type: "richText",
+      description: "Prompt to feed into AI for this project",
+      validation: (rule) => rule.required(),
+    }),
+    // defineField({
+    //   group: "content",
+    //   name: "gallery",
+    //   type: "array",
+    //   of: [
+    //     {
+    //       type: "image",
+    //       validation: (rule) => rule.required().assetRequired().min(2),
+    //     },
+    //   ],
+    // }),
   ],
   preview: {
     select: {

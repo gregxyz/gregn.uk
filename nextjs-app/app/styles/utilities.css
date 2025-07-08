@@ -4,8 +4,35 @@
 
 @utility link-hover {
   @apply relative before:h-[1px] before:w-full before:bg-white before:absolute before:bottom-[-1px] before:right-0 hover:before:w-0 before:transition-all before:duration-200;
+
+  &.link-hover--dark {
+    @apply before:bg-black;
+  }
 }
 
 @utility link-hover-reverse {
   @apply relative before:h-[1px] before:w-0 before:bg-white before:absolute before:bottom-[-1px] before:left-0 hover:before:w-full before:transition-all before:duration-200;
+
+  &.link-hover-reverse--dark {
+    @apply before:bg-black;
+  }
+}
+
+@utility rich-text {
+  p {
+    @apply not-last-of-type:mb-4;
+  }
+
+  ul {
+    @apply my-4 space-y-2;
+
+    li {
+      @apply relative pl-4 before:content-["-"] before:absolute before:left-0;
+
+      > ul {
+        @apply my-1 space-y-0;
+      }
+    }
+
+  }
 }
