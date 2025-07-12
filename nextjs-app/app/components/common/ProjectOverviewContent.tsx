@@ -1,8 +1,8 @@
 "use client";
 
 import IconGemini from "@/app/assets/svg/IconGemini";
+import { type WordSegment, processTextToSegments } from "@/app/lib/utils";
 import type { RichText } from "@/sanity.types";
-import { type WordSegment, processTextToSegments } from "@/sanity/lib/utils";
 import { isAfter } from "date-fns";
 import { motion, useInView } from "motion/react";
 import { toPlainText } from "next-sanity";
