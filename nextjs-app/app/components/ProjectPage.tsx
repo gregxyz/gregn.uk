@@ -1,7 +1,8 @@
+"use client";
 import type { Project } from "@/sanity.types";
-import { ArrowLeft, OpenAiLogo } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-import IconGemini from "../assets/svg/IconGemini";
+import ProjectOverviewContent from "./common/ProjectOverviewContent";
 import RichText from "./common/RichText";
 import SanityImage from "./common/SanityImage";
 
@@ -76,11 +77,8 @@ export default function ProjectPage({ project }: ProjectPageProps) {
         </div>
       </div>
       <article className="mt-10 px-6 md:px-10 lg:mt-20 lg:px-20">
-        <div className="grid grid-cols-1 gap-y-5 lg:grid-cols-2 lg:gap-x-20">
-          <div>
-            <h3 className="mb-4 text-black/40 text-xs uppercase tracking-widest">
-              Overview_
-            </h3>
+        <div className="grid grid-cols-1 gap-y-5 lg:grid-cols-2 xl:gap-x-20">
+          <div className="order-last lg:order-first">
             <div className="lg:w-[80%]">
               <div className="bg-gray-50 p-4 font-light text-[12px]">
                 <h4 className="mb-6 text-black/50 text-xs uppercase tracking-widest">
@@ -93,16 +91,14 @@ export default function ProjectPage({ project }: ProjectPageProps) {
             </div>
           </div>
           <div className="space-y-4 text-grey-700 leading-7">
-            <div className="flex flex-col gap-y-1 text-xs opacity-50">
-              <div className="w-[60px]">
-                <IconGemini />
-              </div>
-              <span>Powered by Gemini 2.5 Flash-Lite Preview</span>
-            </div>
+            <ProjectOverviewContent
+              prompt={project.prompt}
+              slug={project.slug?.current || ""}
+            />
           </div>
         </div>
       </article>
-      <div className="mt-20 px-6 text-center md:mt-40">
+      <div className="mt-20 px-6 text-center md:pt-40">
         <a
           href={project.url}
           target="_blank"

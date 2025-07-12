@@ -22,4 +22,20 @@
   body {
     @apply font-body text-black;
   }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@layer components {
+  .word {
+    animation: fadeInUp 0.3s linear forwards;
+    opacity: 0;
+  }
 }
