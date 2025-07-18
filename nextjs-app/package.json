@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.8.0",
+    "@gsap/react": "^2.1.2",
     "@phosphor-icons/react": "^2.1.7",
     "@sanity/asset-utils": "^2.2.1",
     "@sanity/client": "^6.27.2",
@@ -24,7 +25,6 @@
     "autoprefixer": "^10.4.20",
     "date-fns": "^3.6.0",
     "gsap": "^3.13.0",
-    "motion": "^12.23.1",
     "next": "^15.1.6",
     "next-sanity": "^9.8.42",
     "react": "^19.0.0",
