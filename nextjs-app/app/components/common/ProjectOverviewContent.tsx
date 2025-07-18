@@ -3,8 +3,9 @@
 import IconGemini from "@/app/assets/svg/IconGemini";
 import { type WordSegment, processTextToSegments } from "@/app/lib/utils";
 import type { RichText } from "@/sanity.types";
+import { useGSAP } from "@gsap/react";
 import { isAfter } from "date-fns";
-import { motion, useInView } from "motion/react";
+import { gsap } from "gsap";
 import { toPlainText } from "next-sanity";
 import { useEffect, useRef, useState } from "react";
 
@@ -16,8 +17,58 @@ interface ProjectOverviewContentProps {
 function ProjectOverviewContent({ prompt, slug }: ProjectOverviewContentProps) {
   const [words, setWords] = useState<WordSegment[]>([]);
   const [isComplete, setIsComplete] = useState(false);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const [isInView, setIsInView] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+  const poweredByRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (!ref.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isInView) {
+          setIsInView(true);
+        }
+      },
+      { threshold: 0.3 },
+    );
+
+    observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, [isInView]);
+
+  useGSAP(() => {
+    if (!isInView || words.length === 0) return;
+
+    const wordElements = ref.current?.querySelectorAll(".word");
+    if (!wordElements) return;
+
+    gsap.set(wordElements, { opacity: 0, y: 10 });
+    gsap.to(wordElements, {
+      opacity: 1,
+      y: 0,
+      duration: 0.3,
+      stagger: 0.05,
+      ease: "power2.out",
+      onComplete: () => setIsComplete(true),
+    });
+  }, [isInView, words]);
+
+  useGSAP(() => {
+    if (!isComplete || !poweredByRef.current) return;
+
+    gsap.fromTo(
+      poweredByRef.current,
+      { opacity: 0 },
+      {
+        opacity: 0.5,
+        duration: 0.6,
+        ease: "power2.out",
+      },
+    );
+  }, [isComplete]);
 
   useEffect(() => {
     if (!prompt || !slug) return;
@@ -89,21 +140,6 @@ function ProjectOverviewContent({ prompt, slug }: ProjectOverviewContentProps) {
     generateContent();
   }, [prompt, slug]);
 
-  useEffect(() => {
-    if (!isInView || words.length === 0) return;
-
-    setIsComplete(false);
-
-    const lastWordIndex = words.length - 1;
-    const lastWordDelay = lastWordIndex * 0.05 * 1000;
-    const animationDuration = 300;
-    const totalTime = lastWordDelay + animationDuration + 100;
-
-    setTimeout(() => {
-      setIsComplete(true);
-    }, totalTime);
-  }, [isInView, words]);
-
   return (
     <div ref={ref}>
       <h3 className="mb-4 text-black/40 text-xs uppercase tracking-widest">
@@ -150,17 +186,12 @@ function ProjectOverviewContent({ prompt, slug }: ProjectOverviewContentProps) {
       )}
 
       {isComplete && (
-        <motion.div
-          className="flex flex-col gap-y-1 text-xs"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.5 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
+        <div ref={poweredByRef} className="flex flex-col gap-y-1 text-xs">
           <div className="w-[60px]">
             <IconGemini />
           </div>
           <span>Powered by Gemini 2.5 Flash-Lite Preview</span>
-        </motion.div>
+        </div>
       )}
     </div>
   );
