@@ -1,6 +1,5 @@
 import "./styles/globals.css";
 
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { VisualEditing, toPlainText } from "next-sanity";
 import { draftMode } from "next/headers";
@@ -77,7 +76,6 @@ export default async function RootLayout({
           <SanityLive onError={handleError} />
           <main className="">{children}</main>
         </section>
-        <SpeedInsights />
       </body>
     </html>
   );
