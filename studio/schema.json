@@ -752,6 +752,10 @@
               {
                 "type": "string",
                 "value": "page"
+              },
+              {
+                "type": "string",
+                "value": "project"
               }
             ]
           },
@@ -791,6 +795,36 @@
               }
             },
             "dereferencesTo": "page"
+          },
+          "optional": true
+        },
+        "project": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "object",
+            "attributes": {
+              "_ref": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "reference"
+                }
+              },
+              "_weak": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "boolean"
+                },
+                "optional": true
+              }
+            },
+            "dereferencesTo": "project"
           },
           "optional": true
         },
@@ -1964,7 +1998,8 @@
       "pageBuilder": {
         "type": "objectAttribute",
         "value": {
-          "type": "null"
+          "type": "inline",
+          "name": "contentBlocks"
         },
         "optional": true
       }

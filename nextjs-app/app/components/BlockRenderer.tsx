@@ -1,24 +1,38 @@
+import type { GetHomeQueryResult } from "@/sanity.types";
 import { dataAttr } from "@/sanity/lib/utils";
 import React from "react";
 import { blocks } from "./blocks";
 
-type BlocksType = {
-  [key: string]: React.ComponentType<BlockProps>;
+type HomePageBuilder = NonNullable<
+  NonNullable<GetHomeQueryResult>["pageBuilder"]
+>;
+
+type ContentBlock = HomePageBuilder[number];
+
+type BlockComponentProps = {
+  block: ContentBlock;
+  index?: number;
+  pageId?: string;
+  pageType?: string;
 };
 
-type BlockType = {
-  _type: string;
-  _key: string;
+type BlocksType = {
+  [K in keyof typeof blocks]: React.ComponentType<{
+    block: Extract<ContentBlock, { _type: K }>;
+    index?: number;
+    pageId?: string;
+    pageType?: string;
+  }>;
 };
 
 type BlockProps = {
   index: number;
-  block: BlockType;
+  block: ContentBlock;
   pageId: string;
   pageType: string;
 };
 
-const Blocks: BlocksType = blocks;
+const Blocks = blocks as BlocksType;
 
 /**
  * Used by the <PageBuilder>, this component renders a the component that matches the block type.
@@ -30,7 +44,8 @@ export default function BlockRenderer({
   pageType,
 }: BlockProps) {
   // Block does exist
-  if (typeof Blocks[block._type] !== "undefined") {
+  if (typeof Blocks[block._type as keyof BlocksType] !== "undefined") {
+    const BlockComponent = Blocks[block._type as keyof BlocksType];
     return (
       <div
         key={block._key}
@@ -40,13 +55,16 @@ export default function BlockRenderer({
           path: `pageBuilder[_key=="${block._key}"]`,
         }).toString()}
       >
-        {React.createElement(Blocks[block._type], {
-          key: block._key,
-          block: block,
-          index: index,
-          pageId: pageId,
-          pageType: pageType,
-        })}
+        {React.createElement(
+          BlockComponent as React.ComponentType<BlockComponentProps>,
+          {
+            key: block._key,
+            block: block,
+            index: index,
+            pageId: pageId,
+            pageType: pageType,
+          },
+        )}
       </div>
     );
   }

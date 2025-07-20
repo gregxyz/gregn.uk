@@ -1,15 +1,6 @@
-import type {
-  Link,
-  SanityAssetSourceData,
-  SanityFileAsset,
-} from "@/sanity.types";
+import type { Link } from "@/sanity.types";
 import { dataset, projectId, studioUrl } from "@/sanity/lib/api";
-import {
-  SanityAsset,
-  SanityAssetSource,
-  type SanityFileSource,
-  getFileAsset,
-} from "@sanity/asset-utils";
+import { getFileAsset } from "@sanity/asset-utils";
 import createImageUrlBuilder from "@sanity/image-url";
 import {
   type CreateDataAttributeProps,
@@ -62,10 +53,12 @@ export function linkResolver(link: Link | undefined) {
       if (link?.page && typeof link.page === "string") {
         return `/${link.page}`;
       }
-    case "post":
-      if (link?.post && typeof link.post === "string") {
-        return `/posts/${link.post}`;
+      break;
+    case "project":
+      if (link?.project && typeof link.project === "string") {
+        return `/project/${link.project}`;
       }
+      break;
     default:
       return null;
   }

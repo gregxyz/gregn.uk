@@ -1,5 +1,5 @@
-import { defineField, defineType } from "sanity";
 import { DocumentIcon } from "@sanity/icons";
+import { defineField, defineType } from "sanity";
 
 /**
  * Page schema.  Define and edit the fields for the 'page' content type.
@@ -7,44 +7,43 @@ import { DocumentIcon } from "@sanity/icons";
  */
 
 export const page = defineType({
-	name: "page",
-	title: "Page",
-	type: "document",
-	icon: DocumentIcon,
-	fields: [
-		defineField({
-			name: "name",
-			title: "Name",
-			type: "string",
-			validation: (Rule) => Rule.required(),
-		}),
+  name: "page",
+  title: "Page",
+  type: "document",
+  icon: DocumentIcon,
+  fields: [
+    defineField({
+      name: "name",
+      title: "Name",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
 
-		defineField({
-			name: "slug",
-			title: "Slug",
-			type: "slug",
-			validation: (Rule) => Rule.required(),
-			options: {
-				source: "name",
-				maxLength: 96,
-			},
-		}),
-		defineField({
-			name: "pageBuilder",
-			title: "Page builder",
-			type: "array",
-			of: [],
-			options: {
-				insertMenu: {
-					views: [
-						{
-							name: "grid",
-							previewImageUrl: (schemaTypeName) =>
-								`/static/page-builder-thumbnails/${schemaTypeName}.webp`,
-						},
-					],
-				},
-			},
-		}),
-	],
+    defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      validation: (Rule) => Rule.required(),
+      options: {
+        source: "name",
+        maxLength: 96,
+      },
+    }),
+    defineField({
+      name: "pageBuilder",
+      title: "Page builder",
+      type: "contentBlocks",
+      options: {
+        insertMenu: {
+          views: [
+            {
+              name: "grid",
+              previewImageUrl: (schemaTypeName: string) =>
+                `/static/page-builder-thumbnails/${schemaTypeName}.webp`,
+            },
+          ],
+        },
+      },
+    }),
+  ],
 });

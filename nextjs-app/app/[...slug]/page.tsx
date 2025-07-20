@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import BlockRenderer from "@/app/components/BlockRenderer";
 import ProjectPage from "@/app/components/ProjectPage";
 import Footer from "@/app/components/core/Footer";
-import type { ContentBlocks } from "@/sanity.types";
+import type { GetPageQueryResult } from "@/sanity.types";
 import { sanityFetch } from "@/sanity/lib/live";
 import { allSlugs, getPageQuery, getProjectQuery } from "@/sanity/lib/queries";
 
@@ -12,11 +12,8 @@ type Props = {
   params: Promise<{ slug: string[] }>;
 };
 
-type PageWithBuilder = {
-  _id: string;
-  _type: "page";
-  name: string;
-  pageBuilder?: ContentBlocks;
+type PageWithBuilder = Omit<NonNullable<GetPageQueryResult>, "pageBuilder"> & {
+  pageBuilder?: NonNullable<NonNullable<GetPageQueryResult>["pageBuilder"]>;
 };
 
 /**
