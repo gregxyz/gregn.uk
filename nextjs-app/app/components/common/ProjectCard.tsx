@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
+import { unstable_ViewTransition as ViewTransition } from "react";
 import { AnimateFadeUp } from "./AnimateFadeUp";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -60,12 +61,14 @@ function ProjectCard({
       <div className="mt-auto h-[420px] w-full bg-grey-900 px-6 py-10 transition-colors duration-400 group-hover:bg-grey-600/5 sm:p-10">
         <div className="relative size-full overflow-hidden rounded-[2px]">
           {projectImage && (
-            <Image
-              src={projectImage}
-              alt=""
-              fill={true}
-              className="size-full object-cover"
-            />
+            <ViewTransition name={`project-image-${card.slug.current}`}>
+              <Image
+                src={projectImage}
+                alt=""
+                fill={true}
+                className="size-full object-cover"
+              />
+            </ViewTransition>
           )}
           <div ref={overlayRef} className="absolute inset-0 bg-grey-900" />
         </div>

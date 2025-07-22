@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ hostname: "cdn.sanity.io" }],
   },
+  experimental: {
+    viewTransition: true,
+  },
 };
 
 export default nextConfig;

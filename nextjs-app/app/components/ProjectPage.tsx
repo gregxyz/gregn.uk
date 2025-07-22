@@ -2,6 +2,7 @@
 import type { Project } from "@/sanity.types";
 import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+import { unstable_ViewTransition as ViewTransition } from "react";
 import ProjectOverviewContent from "./common/ProjectOverviewContent";
 import RichText from "./common/RichText";
 import SanityImage from "./common/SanityImage";
@@ -63,16 +64,18 @@ export default function ProjectPage({ project }: ProjectPageProps) {
       <div className="relative px-6 before:absolute before:inset-0 before:h-1/3 before:bg-[#000] md:px-10">
         <div className="relative">
           {project.heroImage && (
-            <figure className="h-[200px] w-full md:h-[85vh]">
-              <SanityImage
-                image={project.heroImage}
-                alt={project.title}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority
-              />
-            </figure>
+            <ViewTransition name={`project-image-${project.slug?.current}`}>
+              <figure className="h-[200px] w-full md:h-[85vh]">
+                <SanityImage
+                  image={project.heroImage}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                  priority
+                />
+              </figure>
+            </ViewTransition>
           )}
         </div>
       </div>
