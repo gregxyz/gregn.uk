@@ -5,8 +5,8 @@
   --font-body: var(--font-lexend);
 
   --text-fluid-sm: clamp(0.75rem, 0.75rem + 0.25vw, 6rem);
-  --text-fluid-xl: clamp(2rem, 1rem + 4vw, 7rem);
-  --text-fluid-xl--line-height: clamp(2rem, 1rem + 4vw, 7rem);
+  --text-fluid-xl: clamp(2.6rem, 1rem + 4vw, 7rem);
+  --text-fluid-xl--line-height: clamp(2.6rem, 1rem + 4vw, 7rem);
   --text-fluid-2xl: clamp(3rem, 1rem + 6vw, 10rem);
   --text-fluid-2xl--line-height: clamp(3rem, 1rem + 6vw, 10rem);
 
