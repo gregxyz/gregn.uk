@@ -21,7 +21,7 @@ interface AnimateFadeUpProps {
 export function AnimateFadeUp({
   children,
   delay = 0,
-  duration = 0.6,
+  duration = 1.2,
   distance = 10,
   trigger = "viewport",
   className = "",
