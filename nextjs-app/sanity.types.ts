@@ -181,6 +181,7 @@ export type Settings = {
     metadataBase?: string;
     _type: "image";
   };
+  basePrompt?: string;
 };
 
 export type Project = {
@@ -507,6 +508,7 @@ export type SettingsQueryResult = {
     metadataBase?: string;
     _type: "image";
   };
+  basePrompt?: string;
 } | null;
 // Variable: getHomeQuery
 // Query: *[_type == 'home'][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "featuredProject" => {      ...,      project-> {       ...,      },    },    _type == "projectList" => {      ...,      projects[]-> {       ...,      },    },  },  }

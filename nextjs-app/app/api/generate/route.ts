@@ -1,3 +1,5 @@
+import { client } from "@/sanity/lib/client";
+import { settingsQuery } from "@/sanity/lib/queries";
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -10,9 +12,20 @@ export async function POST(request: Request) {
       return new Response("Prompt is required", { status: 400 });
     }
 
+    let settings = null;
+    try {
+      settings = await client.fetch(settingsQuery);
+    } catch (error) {
+      console.warn("Failed to fetch settings from Sanity:", error);
+    }
+
+    const basePrompt =
+      settings?.basePrompt ||
+      "Generate a project summary based on the following prompt, keeping it concise and engaging and under 3 short paragraphs:";
+
     const response = await ai.models.generateContentStream({
       model: "gemini-2.5-flash-lite-preview-06-17",
-      contents: `Generate a project summary based on the following prompt, keeping it concise and engaging and under 3 short paragraphs:\n\n${prompt}`,
+      contents: `${basePrompt}\n\n${prompt}`,
     });
 
     const stream = new ReadableStream({
@@ -36,6 +49,10 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    return new Response("Internal Server Error", { status: 500 });
+    console.error("Error in generate API:", error);
+    return new Response(
+      error instanceof Error ? error.message : "Internal Server Error",
+      { status: 500 },
+    );
   }
 }

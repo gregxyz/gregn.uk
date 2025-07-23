@@ -1,17 +1,60 @@
 "use client";
-import type { Project } from "@/sanity.types";
+import type { Project, SettingsQueryResult } from "@/sanity.types";
+import { useGSAP } from "@gsap/react";
 import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import { unstable_ViewTransition as ViewTransition } from "react";
+import { unstable_ViewTransition as ViewTransition, useRef } from "react";
 import ProjectOverviewContent from "./common/ProjectOverviewContent";
 import RichText from "./common/RichText";
 import SanityImage from "./common/SanityImage";
 
 type ProjectPageProps = {
   project: Project;
+  settings?: SettingsQueryResult;
 };
 
-export default function ProjectPage({ project }: ProjectPageProps) {
+gsap.registerPlugin(ScrollTrigger);
+
+export default function ProjectPage({ project, settings }: ProjectPageProps) {
+  const promptRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      if (!settings?.basePrompt) return;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: promptRef.current,
+          start: "30% bottom",
+        },
+      });
+
+      gsap.set(".base-prompt", { opacity: 1 });
+      gsap.set(".project-prompt", { opacity: 0.5 });
+
+      tl.to(
+        ".base-prompt",
+        {
+          opacity: 0.5,
+          duration: 0.5,
+          ease: "power2.out",
+        },
+        8,
+      ).to(
+        ".project-prompt",
+        {
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out",
+        },
+        "<",
+      );
+    },
+    { scope: promptRef },
+  );
+
   return (
     <div className="mb-10 md:mb-5">
       <div className="bg-[#000] pt-8">
@@ -82,12 +125,20 @@ export default function ProjectPage({ project }: ProjectPageProps) {
       <article className="mt-10 px-6 md:px-10 lg:mt-20 lg:px-20">
         <div className="grid grid-cols-1 gap-y-5 lg:grid-cols-2 xl:gap-x-20">
           <div className="order-last lg:order-first">
-            <div className="lg:w-[80%]">
-              <div className="bg-gray-50 p-4 font-light text-[12px]">
-                <h4 className="mb-6 text-black/50 text-xs uppercase tracking-widest">
-                  Prompt
+            <div ref={promptRef} className="lg:w-[80%]">
+              {settings?.basePrompt && (
+                <div className="base-prompt border-b border-b-white bg-gray-50/80 p-4 font-light">
+                  <h4 className="mb-6 text-xs uppercase tracking-widest">
+                    Base prompt
+                  </h4>
+                  <p className="text-xs">{settings?.basePrompt}</p>
+                </div>
+              )}
+              <div className="project-prompt bg-gray-50 p-4 font-light text-[12px] opacity-50">
+                <h4 className="mb-6 text-black text-xs uppercase tracking-widest">
+                  Project prompt
                 </h4>
-                <div className="opacity-50">
+                <div>
                   <RichText content={project.prompt} />
                 </div>
               </div>

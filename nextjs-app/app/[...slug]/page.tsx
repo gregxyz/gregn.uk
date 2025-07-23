@@ -6,7 +6,12 @@ import ProjectPage from "@/app/components/ProjectPage";
 import Footer from "@/app/components/core/Footer";
 import type { GetPageQueryResult } from "@/sanity.types";
 import { sanityFetch } from "@/sanity/lib/live";
-import { allSlugs, getPageQuery, getProjectQuery } from "@/sanity/lib/queries";
+import {
+  allSlugs,
+  getPageQuery,
+  getProjectQuery,
+  settingsQuery,
+} from "@/sanity/lib/queries";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -104,6 +109,10 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 }
 
 export default async function Page(props: Props) {
+  const { data: settings } = await sanityFetch({
+    query: settingsQuery,
+  });
+
   const params = await props.params;
   const slugArray = params.slug || [];
 
@@ -130,7 +139,7 @@ export default async function Page(props: Props) {
 
       return (
         <>
-          <ProjectPage project={project} />
+          <ProjectPage project={project} settings={settings} />
           <Footer />
         </>
       );

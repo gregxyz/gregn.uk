@@ -1154,6 +1154,13 @@
           }
         },
         "optional": true
+      },
+      "basePrompt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
       }
     }
   },
