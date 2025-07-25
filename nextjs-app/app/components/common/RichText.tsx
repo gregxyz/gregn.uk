@@ -8,7 +8,7 @@ interface RichTextProps {
 
 function RichText({ content, className }: RichTextProps) {
   return (
-    <div className={`rich-text${className ? ` ${className}` : ""}`}>
+    <div className={`rich-text ${className ? `${className}` : ""}`}>
       <PortableText value={content} />
     </div>
   );
