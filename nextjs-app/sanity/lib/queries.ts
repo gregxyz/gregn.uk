@@ -1,5 +1,5 @@
 import { defineQuery } from "next-sanity";
-import { pageStub } from "./queryStubs";
+import { imageWithMetadata, pageStub } from "./queryStubs";
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
 
@@ -32,6 +32,8 @@ export const getPageQuery = defineQuery(`
 export const getProjectQuery = defineQuery(`
   *[_type == 'project' && slug.current == $slug][0]{
     ...,
+    previewImage ${imageWithMetadata},
+    heroImage ${imageWithMetadata}
   }
 `);
 

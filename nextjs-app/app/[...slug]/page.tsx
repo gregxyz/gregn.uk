@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import BlockRenderer from "@/app/components/BlockRenderer";
 import ProjectPage from "@/app/components/ProjectPage";
 import Footer from "@/app/components/core/Footer";
-import type { GetPageQueryResult } from "@/sanity.types";
+import type { GetPageQueryResult, Project } from "@/sanity.types";
 import { sanityFetch } from "@/sanity/lib/live";
 import {
   allSlugs,
@@ -139,7 +139,10 @@ export default async function Page(props: Props) {
 
       return (
         <>
-          <ProjectPage project={project} settings={settings} />
+          <ProjectPage
+            project={project as unknown as Project}
+            settings={settings}
+          />
           <Footer />
         </>
       );

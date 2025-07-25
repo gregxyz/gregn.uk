@@ -12,11 +12,21 @@ const imageBuilder = createImageUrlBuilder({
 });
 
 export const urlForImage = (source: any) => {
+  // Check if we have an expanded asset (with _id but _ref is null)
+  if (source?.asset?._id && source.asset._ref === null) {
+    return imageBuilder
+      ?.image(source.asset)
+      .auto("format")
+      .quality(90)
+      .fit("max");
+  }
+
   // Ensure that source image contains a valid reference
   if (!source?.asset?._ref) {
     return undefined;
   }
 
+  // We have a reference, pass the full source object
   return imageBuilder?.image(source).auto("format").quality(90).fit("max");
 };
 

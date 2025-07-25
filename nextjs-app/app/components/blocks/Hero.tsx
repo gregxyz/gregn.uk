@@ -4,10 +4,10 @@ import type { Hero as HeroProps } from "@/sanity.types";
 import { useGSAP } from "@gsap/react";
 import { ArrowElbowRightDown } from "@phosphor-icons/react";
 import gsap from "gsap";
-import Image from "next/image";
 import { useRef } from "react";
 import { AnimateFadeUp } from "../common/AnimateFadeUp";
 import RichText from "../common/RichText";
+import SanityImage from "../common/SanityImage";
 
 function Hero({ block }: { block: HeroProps }) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -65,8 +65,8 @@ function Hero({ block }: { block: HeroProps }) {
             ref={overlayRef}
             className="absolute right-0 z-20 size-full bg-white"
           />
-          <Image
-            src="/images/hero-demo.jpg"
+          <SanityImage
+            image={block.image}
             alt=""
             fill={true}
             className="size-full object-cover"

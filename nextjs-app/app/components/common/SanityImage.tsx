@@ -2,6 +2,7 @@ import type { SanityImageCrop, SanityImageHotspot } from "@/sanity.types";
 import { urlForImage } from "@/sanity/lib/utils";
 import Image, { type ImageProps } from "next/image";
 
+// Image type that includes LQIP while preserving original asset reference structure
 export type SanityImageSource = {
   asset?: {
     _ref: string;
@@ -12,6 +13,7 @@ export type SanityImageSource = {
   crop?: SanityImageCrop;
   attribution?: string;
   _type: "image";
+  lqip?: string | null; // LQIP data added directly to image object
 };
 
 export type SanityImageProps = Omit<ImageProps, "src" | "alt"> & {
@@ -75,6 +77,7 @@ export default function SanityImage({
   className,
   ...nextImageProps
 }: SanityImageProps) {
+  // Check if we have a valid asset reference
   if (!image?.asset?._ref) {
     return null;
   }
@@ -101,6 +104,9 @@ export default function SanityImage({
     return null;
   }
 
+  // Generate blur data URL from Sanity LQIP
+  const blurDataURL = image.lqip || undefined;
+
   return (
     <Image
       src={imageUrl}
@@ -108,6 +114,8 @@ export default function SanityImage({
       width={width}
       height={height}
       className={className}
+      placeholder={blurDataURL ? "blur" : "empty"}
+      blurDataURL={blurDataURL}
       {...nextImageProps}
     />
   );

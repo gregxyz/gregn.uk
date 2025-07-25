@@ -1,14 +1,13 @@
 "use client";
 import type { Project as ProjectProps } from "@/sanity.types";
-import { urlForImage } from "@/sanity/lib/utils";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { unstable_ViewTransition as ViewTransition } from "react";
 import { AnimateFadeUp } from "./AnimateFadeUp";
+import SanityImage from "./SanityImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,7 +15,6 @@ function ProjectCard({
   card,
   animationDelay = 0,
 }: { card: ProjectProps; animationDelay?: number }) {
-  const projectImage = urlForImage(card.previewImage)?.url();
   const containerRef = useRef<HTMLAnchorElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -60,10 +58,10 @@ function ProjectCard({
       </div>
       <div className="mt-auto h-[420px] w-full bg-grey-900 px-6 py-10 transition-colors duration-400 group-hover:bg-grey-600/5 sm:p-10">
         <div className="relative size-full overflow-hidden rounded-[2px]">
-          {projectImage && (
+          {card.previewImage && (
             <ViewTransition name={`project-image-${card.slug.current}`}>
-              <Image
-                src={projectImage}
+              <SanityImage
+                image={card.previewImage}
                 alt=""
                 fill={true}
                 className="size-full object-cover"

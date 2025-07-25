@@ -63,7 +63,14 @@ export function AnimateFadeUp({
   });
 
   return (
-    <div ref={elementRef} className={className}>
+    <div
+      ref={elementRef}
+      className={className}
+      style={{
+        opacity: 0,
+        transform: `translateY(${distance}px)`,
+      }}
+    >
       {children}
     </div>
   );

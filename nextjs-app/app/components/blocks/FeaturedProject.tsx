@@ -1,14 +1,14 @@
 "use client";
 import type { Project as ProjectProps } from "@/sanity.types";
-import { getFileAssetSource, urlForImage } from "@/sanity/lib/utils";
+import { getFileAssetSource } from "@/sanity/lib/utils";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { AnimateFadeUp } from "../common/AnimateFadeUp";
+import SanityImage from "../common/SanityImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,10 +27,6 @@ function FeaturedProject({ block }: Props) {
 
   const video = project.video?.file
     ? getFileAssetSource(project.video.file)
-    : null;
-
-  const image = project.heroImage?.asset
-    ? urlForImage(project.heroImage)?.url()
     : null;
 
   useGSAP(
@@ -98,9 +94,9 @@ function FeaturedProject({ block }: Props) {
                   <source src={video.url} type={`video/${video.extension}`} />
                 </video>
               ) : (
-                image && (
-                  <Image
-                    src={image}
+                project.heroImage && (
+                  <SanityImage
+                    image={project.heroImage}
                     alt={project.heroImage?.attribution || ""}
                     className="object-cover"
                     sizes="100vw"

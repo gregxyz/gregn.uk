@@ -85,6 +85,17 @@ export type Hero = {
     _type: "link";
     _key: string;
   }>;
+  image: {
+    asset: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
 };
 
 export type FeaturedProject = {
@@ -260,6 +271,33 @@ export type SanityFileAsset = {
   source?: SanityAssetSourceData;
 };
 
+export type Page = {
+  _id: string;
+  _type: "page";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  slug: Slug;
+  pageBuilder?: ContentBlocks;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
+export type Home = {
+  _id: string;
+  _type: "home";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  pageBuilder?: ContentBlocks;
+};
+
 export type SanityImageCrop = {
   _type: "sanity.imageCrop";
   top?: number;
@@ -315,33 +353,6 @@ export type SanityImageMetadata = {
   blurHash?: string;
   hasAlpha?: boolean;
   isOpaque?: boolean;
-};
-
-export type Page = {
-  _id: string;
-  _type: "page";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name: string;
-  slug: Slug;
-  pageBuilder?: ContentBlocks;
-};
-
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
-export type Home = {
-  _id: string;
-  _type: "home";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  pageBuilder?: ContentBlocks;
 };
 
 export type SanityAssistInstructionTask = {
@@ -465,7 +476,7 @@ export type SanityAssistSchemaTypeField = {
   } & SanityAssistInstruction>;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | Geopoint | ProjectList | Hero | FeaturedProject | RichText | Link | ContentBlocks | Settings | Project | SanityFileAsset | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Page | Slug | Home | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | Geopoint | ProjectList | Hero | FeaturedProject | RichText | Link | ContentBlocks | Settings | Project | SanityFileAsset | Page | Slug | Home | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
@@ -511,7 +522,7 @@ export type SettingsQueryResult = {
   basePrompt?: string;
 } | null;
 // Variable: getHomeQuery
-// Query: *[_type == 'home'][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "featuredProject" => {      ...,      project-> {       ...,      },    },    _type == "projectList" => {      ...,      projects[]-> {       ...,      },    },  },  }
+// Query: *[_type == 'home'][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "hero" => {      ...,      image {  ...,  "lqip": asset->metadata.lqip}    },    _type == "featuredProject" => {      ...,      project-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip},       heroImage {  ...,  "lqip": asset->metadata.lqip}      },    },    _type == "projectList" => {      ...,      projects[]-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip}      },    },  },  }
 export type GetHomeQueryResult = {
   _id: string;
   _type: "home";
@@ -545,8 +556,9 @@ export type GetHomeQueryResult = {
         crop?: SanityImageCrop;
         attribution?: string;
         _type: "image";
+        lqip: string | null;
       };
-      heroImage?: {
+      heroImage: {
         asset?: {
           _ref: string;
           _type: "reference";
@@ -557,7 +569,8 @@ export type GetHomeQueryResult = {
         crop?: SanityImageCrop;
         attribution?: string;
         _type: "image";
-      };
+        lqip: string | null;
+      } | null;
       video?: {
         file?: {
           asset?: {
@@ -602,6 +615,18 @@ export type GetHomeQueryResult = {
       _type: "link";
       _key: string;
     }>;
+    image: {
+      asset: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+      lqip: string | null;
+    };
   } | {
     _key: string;
     _type: "projectList";
@@ -630,6 +655,7 @@ export type GetHomeQueryResult = {
         crop?: SanityImageCrop;
         attribution?: string;
         _type: "image";
+        lqip: string | null;
       };
       heroImage?: {
         asset?: {
@@ -661,7 +687,7 @@ export type GetHomeQueryResult = {
   }> | null;
 } | null;
 // Variable: getPageQuery
-// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "featuredProject" => {      ...,      project-> {       ...,      },    },    _type == "projectList" => {      ...,      projects[]-> {       ...,      },    },  },  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "hero" => {      ...,      image {  ...,  "lqip": asset->metadata.lqip}    },    _type == "featuredProject" => {      ...,      project-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip},       heroImage {  ...,  "lqip": asset->metadata.lqip}      },    },    _type == "projectList" => {      ...,      projects[]-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip}      },    },  },  }
 export type GetPageQueryResult = {
   _id: string;
   _type: "page";
@@ -695,8 +721,9 @@ export type GetPageQueryResult = {
         crop?: SanityImageCrop;
         attribution?: string;
         _type: "image";
+        lqip: string | null;
       };
-      heroImage?: {
+      heroImage: {
         asset?: {
           _ref: string;
           _type: "reference";
@@ -707,7 +734,8 @@ export type GetPageQueryResult = {
         crop?: SanityImageCrop;
         attribution?: string;
         _type: "image";
-      };
+        lqip: string | null;
+      } | null;
       video?: {
         file?: {
           asset?: {
@@ -752,6 +780,18 @@ export type GetPageQueryResult = {
       _type: "link";
       _key: string;
     }>;
+    image: {
+      asset: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+      lqip: string | null;
+    };
   } | {
     _key: string;
     _type: "projectList";
@@ -780,6 +820,7 @@ export type GetPageQueryResult = {
         crop?: SanityImageCrop;
         attribution?: string;
         _type: "image";
+        lqip: string | null;
       };
       heroImage?: {
         asset?: {
@@ -811,7 +852,7 @@ export type GetPageQueryResult = {
   }> | null;
 } | null;
 // Variable: getProjectQuery
-// Query: *[_type == 'project' && slug.current == $slug][0]{    ...,  }
+// Query: *[_type == 'project' && slug.current == $slug][0]{    ...,    previewImage {  ...,  "lqip": asset->metadata.lqip},    heroImage {  ...,  "lqip": asset->metadata.lqip}  }
 export type GetProjectQueryResult = {
   _id: string;
   _type: "project";
@@ -837,8 +878,9 @@ export type GetProjectQueryResult = {
     crop?: SanityImageCrop;
     attribution?: string;
     _type: "image";
+    lqip: string | null;
   };
-  heroImage?: {
+  heroImage: {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -849,7 +891,8 @@ export type GetProjectQueryResult = {
     crop?: SanityImageCrop;
     attribution?: string;
     _type: "image";
-  };
+    lqip: string | null;
+  } | null;
   video?: {
     file?: {
       asset?: {
@@ -890,9 +933,9 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"settings\"][0]": SettingsQueryResult;
-    "\n  *[_type == 'home'][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n      },\n    },\n  },\n\n  }\n": GetHomeQueryResult;
-    "\n  *[_type == 'page' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n      },\n    },\n  },\n\n  }\n": GetPageQueryResult;
-    "\n  *[_type == 'project' && slug.current == $slug][0]{\n    ...,\n  }\n": GetProjectQueryResult;
+    "\n  *[_type == 'home'][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"hero\" => {\n      ...,\n      image {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n    },\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n       heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n  },\n\n  }\n": GetHomeQueryResult;
+    "\n  *[_type == 'page' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"hero\" => {\n      ...,\n      image {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n    },\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n       heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n  },\n\n  }\n": GetPageQueryResult;
+    "\n  *[_type == 'project' && slug.current == $slug][0]{\n    ...,\n    previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n    heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n  }\n": GetProjectQueryResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;
     "\n  *[_type == \"project\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": ProjectsSlugsResult;
     "\n  *[(_type == \"page\" || _type == \"project\") && defined(slug.current)]\n  {\"slug\": slug.current, \"_type\": _type}\n": AllSlugsResult;

@@ -18,7 +18,7 @@ type BlockComponentProps = {
 
 type BlocksType = {
   [K in keyof typeof blocks]: React.ComponentType<{
-    block: Extract<ContentBlock, { _type: K }>;
+    block: unknown;
     index?: number;
     pageId?: string;
     pageType?: string;

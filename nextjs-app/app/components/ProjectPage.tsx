@@ -78,7 +78,7 @@ export default function ProjectPage({ project, settings }: ProjectPageProps) {
             <h1 className="font-medium text-fluid-2xl text-white">
               {project.title}
             </h1>
-            <h2 className="max-w-[560px] font-thin text-base tracking-wide opacity-50">
+            <h2 className="mt-2 max-w-[560px] font-light text-sm tracking-wide opacity-50 md:text-base">
               {project.description || project.tagline}
             </h2>
           </header>
@@ -108,7 +108,7 @@ export default function ProjectPage({ project, settings }: ProjectPageProps) {
         <div className="relative">
           {project.heroImage && (
             <ViewTransition name={`project-image-${project.slug?.current}`}>
-              <figure className="h-[200px] w-full md:h-[85vh]">
+              <figure className="relative h-[320px] w-full md:h-[85vh]">
                 <SanityImage
                   image={project.heroImage}
                   alt={project.title}
