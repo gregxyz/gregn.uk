@@ -1,9 +1,14 @@
 import type { RichText as RichTextType } from "@/sanity.types";
 import { PortableText } from "next-sanity";
 
-function RichText({ content }: { content: RichTextType }) {
+interface RichTextProps {
+  content: RichTextType;
+  className?: string;
+}
+
+function RichText({ content, className }: RichTextProps) {
   return (
-    <div className="rich-text">
+    <div className={`rich-text${className ? ` ${className}` : ""}`}>
       <PortableText value={content} />
     </div>
   );

@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase,
     title: {
       template: `%s | ${title}`,
-      default: "",
+      default: title || "Greg Nicholson",
     },
     description: toPlainText(description),
     openGraph: {

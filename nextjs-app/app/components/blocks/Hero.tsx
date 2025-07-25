@@ -28,7 +28,7 @@ function Hero({ block }: { block: HeroProps }) {
   return (
     <section className="relative flex h-dvh flex-col bg-grid px-6 py-10 md:px-20 md:py-16">
       <div className="mb-8 grid-cols-2 md:mb-0 md:grid">
-        <div className="relative z-20 mb-4 md:mb-0">
+        <div className="relative z-20 mb-3 md:mb-0">
           <AnimateFadeUp delay={0.2}>
             <h1 className="whitespace-pre-line font-bold text-fluid-xl">
               {block.title}
@@ -38,13 +38,16 @@ function Hero({ block }: { block: HeroProps }) {
         <div className="max-w-[400px] md:ml-auto md:place-self-end md:text-right xl:max-w-[30vw]">
           {block.description && (
             <AnimateFadeUp delay={0.6}>
-              <RichText content={block.description} />
+              <RichText
+                content={block.description}
+                className=" opacity-70 md:text-md"
+              />
             </AnimateFadeUp>
           )}
           {!!block.links && (
             <AnimateFadeUp delay={0.65}>
               <nav>
-                <hr className="mt-2 mb-1 w-7 md:ml-auto" />
+                <hr className="mt-4 mb-1 w-7 md:mt-2 md:ml-auto" />
                 <ul className="inline-flex justify-end space-x-2 pr-1 text-xs underline opacity-50">
                   {block.links.map((link) => (
                     <li key={link._key}>
@@ -60,7 +63,7 @@ function Hero({ block }: { block: HeroProps }) {
         </div>
       </div>
       <div className="relative z-10 flex h-full flex-col md:flex-row md:justify-between">
-        <div className="md:-ml-10 md:-mt-15 lg:-mt-6 relative size-full min-w-[200px] shrink-0 overflow-hidden md:h-[75vh] md:w-[18vw]">
+        <div className="md:-ml-10 md:-mt-15 lg:-mt-10 relative size-full min-w-[200px] shrink-0 overflow-hidden md:h-[75vh] md:w-[18vw]">
           <div
             ref={overlayRef}
             className="absolute right-0 z-20 size-full bg-white"
