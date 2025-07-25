@@ -26,7 +26,7 @@ function Hero({ block }: { block: HeroProps }) {
   });
 
   return (
-    <section className="relative flex h-dvh flex-col bg-grid px-6 py-10 md:px-20 md:py-16">
+    <section className="relative flex h-svh flex-col bg-grid px-6 py-10 md:px-20 md:py-16">
       <div className="mb-8 grid-cols-2 md:mb-0 md:grid">
         <div className="relative z-20 mb-3 md:mb-0">
           <AnimateFadeUp delay={0.2}>

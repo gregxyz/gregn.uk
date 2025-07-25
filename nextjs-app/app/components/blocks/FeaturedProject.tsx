@@ -56,7 +56,7 @@ function FeaturedProject({ block }: Props) {
     <section ref={containerRef} className="mt-5 md:mt-20">
       <div
         ref={elementRef}
-        className="relative mx-auto h-dvh min-h-[700px] w-[95%] bg-[#000]"
+        className="relative mx-auto h-svh min-h-[700px] w-[95%] bg-[#000]"
       >
         <div className="flex size-full flex-col py-8 md:py-10">
           <div className="mb-6 flex flex-col justify-between px-6 md:mb-10 md:flex-row md:items-center md:px-10">
