@@ -12,6 +12,16 @@ import SanityImage from "../common/SanityImage";
 function Hero({ block }: { block: HeroProps }) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
+  const scrollToProjects = () => {
+    const featuredProject = document.querySelector('.featured-project');
+    if (featuredProject) {
+      featuredProject.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   useGSAP(() => {
     if (!overlayRef.current) return;
 
@@ -76,6 +86,7 @@ function Hero({ block }: { block: HeroProps }) {
           />
           <button
             type="button"
+            onClick={scrollToProjects}
             className="before:-z-10 absolute right-0 bottom-0 z-10 flex w-[90%] cursor-pointer justify-between gap-x-2 py-2 pl-4 text-left before:absolute before:inset-x-0 before:bottom-0 before:size-full before:bg-white before:transition-height before:duration-300 hover:before:h-[60%]"
           >
             <span className="text-white mix-blend-difference">

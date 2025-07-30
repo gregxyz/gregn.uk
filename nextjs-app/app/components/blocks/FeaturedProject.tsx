@@ -53,7 +53,7 @@ function FeaturedProject({ block }: Props) {
   );
 
   return (
-    <section ref={containerRef} className="mt-5 md:mt-20">
+    <section ref={containerRef} className="featured-project mt-5 md:mt-20">
       <div
         ref={elementRef}
         className="relative mx-auto h-svh min-h-[700px] w-[95%] bg-[#000]"
@@ -120,7 +120,7 @@ function FeaturedProject({ block }: Props) {
                 {project.secondaryTagline}
               </p>
             )}
-            <AnimateFadeUp duration={1}>
+            <AnimateFadeUp start="top bottom" delay={0.4} duration={1}>
               <Link
                 href={projectSlug}
                 className="link-hover flex items-center gap-x-1"
