@@ -35,8 +35,7 @@
 }
 
 @layer components {
-  .word {
-    animation: fadeInUp 0.3s linear forwards;
-    opacity: 0;
+  .animate-word-in {
+    @apply opacity-100 starting:opacity-0 transition-opacity duration-300;
   }
 }

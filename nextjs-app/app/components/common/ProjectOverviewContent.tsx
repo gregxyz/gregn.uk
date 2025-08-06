@@ -3,9 +3,7 @@
 import IconGemini from "@/app/assets/svg/IconGemini";
 import { type WordSegment, processTextToSegments } from "@/app/lib/utils";
 import type { RichText } from "@/sanity.types";
-import { useGSAP } from "@gsap/react";
 import { isAfter } from "date-fns";
-import { gsap } from "gsap";
 import { toPlainText } from "next-sanity";
 import { useEffect, useRef, useState } from "react";
 
@@ -18,11 +16,11 @@ function ProjectOverviewContent({ prompt, slug }: ProjectOverviewContentProps) {
   const [words, setWords] = useState<WordSegment[]>([]);
   const [isComplete, setIsComplete] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const [streamingWords, setStreamingWords] = useState<WordSegment[]>([]);
 
   const ref = useRef<HTMLDivElement>(null);
-  const poweredByRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
+  useEffect(() => {
     if (!ref.current) return;
 
     const observer = new IntersectionObserver(
@@ -39,36 +37,31 @@ function ProjectOverviewContent({ prompt, slug }: ProjectOverviewContentProps) {
     return () => observer.disconnect();
   }, [isInView]);
 
-  useGSAP(() => {
+  useEffect(() => {
     if (!isInView || words.length === 0) return;
 
-    const wordElements = ref.current?.querySelectorAll(".word");
-    if (!wordElements) return;
+    setStreamingWords([]);
 
-    gsap.set(wordElements, { opacity: 0, y: 10 });
-    gsap.to(wordElements, {
-      opacity: 1,
-      y: 0,
-      duration: 0.3,
-      stagger: 0.05,
-      ease: "power2.out",
-      onComplete: () => setIsComplete(true),
+    const timeouts: NodeJS.Timeout[] = [];
+
+    words.forEach((word, index) => {
+      const timeout = setTimeout(() => {
+        setStreamingWords((prev) => [...prev, word]);
+
+        if (index === words.length - 1) {
+          setTimeout(() => setIsComplete(true), 300);
+        }
+      }, index * 50);
+
+      timeouts.push(timeout);
     });
+
+    return () => {
+      for (const timeout of timeouts) {
+        clearTimeout(timeout);
+      }
+    };
   }, [isInView, words]);
-
-  useGSAP(() => {
-    if (!isComplete || !poweredByRef.current) return;
-
-    gsap.fromTo(
-      poweredByRef.current,
-      { opacity: 0 },
-      {
-        opacity: 0.5,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-    );
-  }, [isComplete]);
 
   useEffect(() => {
     if (!prompt || !slug) return;
@@ -145,39 +138,17 @@ function ProjectOverviewContent({ prompt, slug }: ProjectOverviewContentProps) {
       <h3 className="mb-4 text-black/40 text-xs uppercase tracking-widest">
         Overview_
       </h3>
-      {words.length > 0 && isInView && (
+      {streamingWords.length > 0 && (
         <div className="mb-4 text-sm">
-          {words.map((segment, index) => {
+          {streamingWords.map((segment) => {
             if (segment.type === "paragraph-break") {
-              return (
-                <div
-                  key={segment.id}
-                  className="word h-4"
-                  style={{
-                    animationDelay: `${index * 0.05}s`,
-                  }}
-                />
-              );
+              return <div key={segment.id} className="h-4" />;
             }
             if (segment.type === "line-break") {
-              return (
-                <br
-                  key={segment.id}
-                  className="word"
-                  style={{
-                    animationDelay: `${index * 0.05}s`,
-                  }}
-                />
-              );
+              return <br key={segment.id} className="animate-word-in" />;
             }
             return (
-              <span
-                key={segment.id}
-                className="word"
-                style={{
-                  animationDelay: `${index * 0.05}s`,
-                }}
-              >
+              <span key={segment.id} className="animate-word-in">
                 {segment.text}
               </span>
             );
@@ -186,7 +157,7 @@ function ProjectOverviewContent({ prompt, slug }: ProjectOverviewContentProps) {
       )}
 
       {isComplete && (
-        <div ref={poweredByRef} className="flex flex-col gap-y-1 text-xs">
+        <div className="flex flex-col gap-y-1 text-xs opacity-50 starting:opacity-0 transition-opacity duration-600 ease-out">
           <div className="w-[60px]">
             <IconGemini />
           </div>
