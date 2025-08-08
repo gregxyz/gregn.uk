@@ -4,7 +4,7 @@ import { useGSAP } from "@gsap/react";
 import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { unstable_ViewTransition as ViewTransition, useRef } from "react";
 import ProjectOverviewContent from "./common/ProjectOverviewContent";
 import RichText from "./common/RichText";
@@ -19,6 +19,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function ProjectPage({ project, settings }: ProjectPageProps) {
   const promptRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      return router.back();
+    }
+
+    router.push("/");
+  };
 
   useGSAP(
     () => {
@@ -59,13 +68,14 @@ export default function ProjectPage({ project, settings }: ProjectPageProps) {
     <div className="mb-10 md:mb-5">
       <div className="bg-[#000] pt-8">
         <div className="flex justify-between px-6 text-white md:px-10">
-          <Link
-            href="/"
+          <button
+            type="button"
+            onClick={handleBack}
             className="link-hover-reverse inline-flex items-center gap-2"
           >
             <ArrowLeft size={16} />
             <span className="text-sm uppercase tracking-widest">Back</span>
-          </Link>
+          </button>
           <div className="">
             <p className="text-right leading-[0.8] opacity-30">
               G
@@ -107,7 +117,10 @@ export default function ProjectPage({ project, settings }: ProjectPageProps) {
       <div className="relative px-6 before:absolute before:inset-0 before:h-1/3 before:bg-[#000] md:px-10">
         <div className="relative">
           {project.heroImage && (
-            <ViewTransition name={`project-image-${project.slug?.current}`}>
+            <ViewTransition
+              name={`project-image-${project.slug?.current}`}
+              share="project-image-share"
+            >
               <figure className="relative h-[320px] w-full md:h-[85vh]">
                 <SanityImage
                   image={project.heroImage}

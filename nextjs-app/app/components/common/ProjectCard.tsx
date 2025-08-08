@@ -22,18 +22,33 @@ function ProjectCard({
     if (!containerRef.current || !overlayRef.current) return;
 
     const overlay = overlayRef.current;
+    const mm = gsap.matchMedia();
+    const breakPoint = 768;
 
-    gsap.to(overlay, {
-      opacity: 0,
-      duration: 0.6,
-      delay: animationDelay + 0.1,
-      ease: "expo.in",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top 90%",
+    mm.add(
+      {
+        isDesktop: `(min-width: ${breakPoint}px)`,
+        isMobile: `(max-width: ${breakPoint - 1}px)`,
       },
-    });
-  }, []);
+      (context) => {
+        const { isDesktop } = context.conditions as {
+          isDesktop: boolean;
+          isMobile: boolean;
+        };
+        const delay = isDesktop ? animationDelay + 0.1 : 0;
+
+        gsap.to(overlay, {
+          height: 0,
+          duration: 0.6,
+          delay,
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 90%",
+          },
+        });
+      },
+    );
+  }, [animationDelay]);
 
   return (
     <Link
@@ -59,7 +74,10 @@ function ProjectCard({
       <div className="mt-auto h-[420px] w-full bg-grey-900 px-6 py-10 transition-colors duration-400 group-hover:bg-grey-600/5 sm:p-10">
         <div className="relative size-full overflow-hidden rounded-[2px]">
           {card.previewImage && (
-            <ViewTransition name={`project-image-${card.slug.current}`}>
+            <ViewTransition
+              name={`project-image-${card.slug.current}`}
+              share="project-image-share"
+            >
               <SanityImage
                 image={card.previewImage}
                 alt=""
@@ -68,7 +86,10 @@ function ProjectCard({
               />
             </ViewTransition>
           )}
-          <div ref={overlayRef} className="absolute inset-0 bg-grey-900" />
+          <div
+            ref={overlayRef}
+            className="pointer-events-none absolute inset-0 size-full bg-grey-900"
+          />
         </div>
       </div>
     </Link>
