@@ -45,21 +45,23 @@ function Hero({ block }: { block: HeroProps }) {
       gsap.set(
         [titleSplit.chars, nav, scrollButton, marqueeContainer].filter(Boolean),
         {
-          opacity: 0,
+          autoAlpha: 0,
           filter: "blur(8px)",
         },
       );
 
       gsap.set(descriptionSplit.lines, {
-        opacity: 0,
+        autoAlpha: 0,
         filter: "blur(8px)",
         y: 20,
       });
 
+      containerRef.current?.classList.remove("invisible");
+
       const tl = gsap.timeline();
 
       tl.to(titleSplit.chars, {
-        opacity: 1,
+        autoAlpha: 1,
         filter: "blur(0px)",
         duration: 1.5,
         ease: "power2.out",
@@ -69,7 +71,7 @@ function Hero({ block }: { block: HeroProps }) {
       tl.to(
         descriptionSplit.lines,
         {
-          opacity: 1,
+          autoAlpha: 1,
           filter: "blur(0px)",
           y: 0,
           duration: 1.2,
@@ -82,7 +84,7 @@ function Hero({ block }: { block: HeroProps }) {
       tl.to(
         [nav, scrollButton, marqueeContainer].filter(Boolean),
         {
-          opacity: 1,
+          autoAlpha: 1,
           filter: "blur(0px)",
           duration: 1,
           ease: "power2.out",
@@ -121,11 +123,13 @@ function Hero({ block }: { block: HeroProps }) {
 
               if (distanceFromLeft < fadeDistance) {
                 const progress = Math.max(0, distanceFromLeft / fadeDistance);
-                const opacity = progress;
                 const blur = maxBlur * (1 - progress);
-                gsap.set(char, { opacity, filter: `blur(${blur}px)` });
+                gsap.set(char, {
+                  autoAlpha: progress,
+                  filter: `blur(${blur}px)`,
+                });
               } else {
-                gsap.set(char, { opacity: 1, filter: "blur(0px)" });
+                gsap.set(char, { autoAlpha: 1, filter: "blur(0px)" });
               }
             }
           }
@@ -138,7 +142,7 @@ function Hero({ block }: { block: HeroProps }) {
   return (
     <div
       ref={containerRef}
-      className="relative h-[calc(100svh-30px)] overflow-hidden py-6 pl-6 sm:py-10 sm:pl-10"
+      className="invisible relative h-[calc(100svh-30px)] overflow-hidden py-6 pl-6 sm:py-10 sm:pl-10"
     >
       <div className="flex h-[calc(100%-30px)] flex-col justify-between">
         <div className="flex flex-col gap-x-2 md:flex-row md:items-end md:justify-between">
