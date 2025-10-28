@@ -32,6 +32,12 @@ export const project = defineType({
     }),
     defineField({
       group: "page",
+      name: "subtitle",
+      title: "Subtitle",
+      type: "string",
+    }),
+    defineField({
+      group: "page",
       name: "slug",
       type: "slug",
       options: {
@@ -55,7 +61,6 @@ export const project = defineType({
       name: "url",
       title: "URL",
       type: "url",
-      validation: (rule) => rule.required(),
     }),
     defineField({
       group: "page",

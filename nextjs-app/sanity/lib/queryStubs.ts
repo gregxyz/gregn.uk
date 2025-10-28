@@ -22,6 +22,14 @@ export const pageStub = `
        heroImage ${imageWithMetadata}
       },
     },
+    _type == "videoProject" => {
+      ...,
+      project-> {
+       ...,
+       previewImage ${imageWithMetadata},
+       heroImage ${imageWithMetadata}
+      },
+    },
     _type == "projectList" => {
       ...,
       projects[]-> {

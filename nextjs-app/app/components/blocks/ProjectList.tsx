@@ -9,7 +9,7 @@ interface Props {
 
 function ProjectList({ block }: Props) {
   return (
-    <section className="mt-15 md:mt-20">
+    <section className="pt-15 pb-20 md:pt-20">
       <div className="grid grid-cols-6 gap-12 sm:px-10">
         {block.projects?.map((project, index) => (
           <div
