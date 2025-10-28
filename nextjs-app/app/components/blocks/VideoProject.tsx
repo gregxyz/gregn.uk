@@ -38,8 +38,6 @@ function VideoProject({ block }: Props) {
         ) {
           videoElement.play();
           setHasPlayed(true);
-        } else if (!entry.isIntersecting && hasPlayed) {
-          videoElement.pause();
         }
       },
       {
