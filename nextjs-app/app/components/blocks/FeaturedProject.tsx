@@ -21,7 +21,6 @@ interface Props {
 function FeaturedProject({ block }: Props) {
   const { project } = block;
   const containerRef = useRef<HTMLDivElement>(null);
-  const elementRef = useRef<HTMLDivElement>(null);
 
   const projectSlug = `/project/${project.slug.current}`;
 
@@ -31,33 +30,29 @@ function FeaturedProject({ block }: Props) {
 
   useGSAP(
     () => {
-      if (!elementRef.current) return;
-
-      gsap.fromTo(
-        elementRef.current,
-        { width: "90%" },
-        {
-          width: "100%",
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: elementRef.current,
-            start: "top bottom",
-            end: "45% bottom",
-            scrub: true,
-            once: true,
-          },
-        },
+      const element = containerRef.current?.querySelector(
+        ".featured-project-inner",
       );
+      if (!element) return;
+
+      gsap.to(element, {
+        width: "100%",
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: element,
+          start: "top bottom-=30px",
+          end: "45% bottom",
+          scrub: true,
+          once: true,
+        },
+      });
     },
     { scope: containerRef },
   );
 
   return (
-    <section ref={containerRef} className="featured-project mt-5 md:mt-20">
-      <div
-        ref={elementRef}
-        className="relative mx-auto h-svh min-h-[700px] w-[95%] bg-[#000]"
-      >
+    <section ref={containerRef} className="featured-project">
+      <div className="featured-project-inner relative mx-auto h-svh min-h-[700px] w-[calc(100%-80px)] bg-[#000]">
         <div className="flex size-full flex-col py-8 md:py-10">
           <div className="mb-6 flex flex-col justify-between px-6 md:mb-10 md:flex-row md:items-center md:px-10">
             <div className="flex">

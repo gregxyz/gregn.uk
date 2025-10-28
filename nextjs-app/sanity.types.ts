@@ -13,37 +13,14 @@
  */
 
 // Source: schema.json
-export type SanityImagePaletteSwatch = {
-  _type: "sanity.imagePaletteSwatch";
-  background?: string;
-  foreground?: string;
-  population?: number;
-  title?: string;
-};
-
-export type SanityImagePalette = {
-  _type: "sanity.imagePalette";
-  darkMuted?: SanityImagePaletteSwatch;
-  lightVibrant?: SanityImagePaletteSwatch;
-  darkVibrant?: SanityImagePaletteSwatch;
-  vibrant?: SanityImagePaletteSwatch;
-  dominant?: SanityImagePaletteSwatch;
-  lightMuted?: SanityImagePaletteSwatch;
-  muted?: SanityImagePaletteSwatch;
-};
-
-export type SanityImageDimensions = {
-  _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
-};
-
-export type Geopoint = {
-  _type: "geopoint";
-  lat?: number;
-  lng?: number;
-  alt?: number;
+export type VideoProject = {
+  _type: "videoProject";
+  project: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "project";
+  };
 };
 
 export type ProjectList = {
@@ -85,17 +62,7 @@ export type Hero = {
     _type: "link";
     _key: string;
   }>;
-  image: {
-    asset: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  skills?: Array<string>;
 };
 
 export type FeaturedProject = {
@@ -152,7 +119,9 @@ export type ContentBlocks = Array<{
   _key: string;
 } & Hero | {
   _key: string;
-} & ProjectList>;
+} & ProjectList | {
+  _key: string;
+} & VideoProject>;
 
 export type Settings = {
   _id: string;
@@ -186,6 +155,7 @@ export type Settings = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
     };
+    media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
@@ -202,9 +172,10 @@ export type Project = {
   _updatedAt: string;
   _rev: string;
   title: string;
+  subtitle?: string;
   slug: Slug;
   client: string;
-  url: string;
+  url?: string;
   services?: Array<string>;
   tagline: string;
   secondaryTagline?: string;
@@ -216,6 +187,7 @@ export type Project = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
     };
+    media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     attribution?: string;
@@ -228,6 +200,7 @@ export type Project = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
     };
+    media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     attribution?: string;
@@ -241,12 +214,76 @@ export type Project = {
         _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
       };
+      media?: unknown;
       _type: "file";
     };
     attribution?: string;
   };
   description?: string;
   prompt: RichText;
+};
+
+export type Page = {
+  _id: string;
+  _type: "page";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  slug: Slug;
+  pageBuilder?: ContentBlocks;
+};
+
+export type Home = {
+  _id: string;
+  _type: "home";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  pageBuilder?: ContentBlocks;
+};
+
+export type SanityImagePaletteSwatch = {
+  _type: "sanity.imagePaletteSwatch";
+  background?: string;
+  foreground?: string;
+  population?: number;
+  title?: string;
+};
+
+export type SanityImagePalette = {
+  _type: "sanity.imagePalette";
+  darkMuted?: SanityImagePaletteSwatch;
+  lightVibrant?: SanityImagePaletteSwatch;
+  darkVibrant?: SanityImagePaletteSwatch;
+  vibrant?: SanityImagePaletteSwatch;
+  dominant?: SanityImagePaletteSwatch;
+  lightMuted?: SanityImagePaletteSwatch;
+  muted?: SanityImagePaletteSwatch;
+};
+
+export type SanityImageDimensions = {
+  _type: "sanity.imageDimensions";
+  height?: number;
+  width?: number;
+  aspectRatio?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
 };
 
 export type SanityFileAsset = {
@@ -269,49 +306,6 @@ export type SanityFileAsset = {
   path?: string;
   url?: string;
   source?: SanityAssetSourceData;
-};
-
-export type Page = {
-  _id: string;
-  _type: "page";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name: string;
-  slug: Slug;
-  pageBuilder?: ContentBlocks;
-};
-
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
-export type Home = {
-  _id: string;
-  _type: "home";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  pageBuilder?: ContentBlocks;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
 };
 
 export type SanityImageAsset = {
@@ -337,13 +331,6 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData;
 };
 
-export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
-  name?: string;
-  id?: string;
-  url?: string;
-};
-
 export type SanityImageMetadata = {
   _type: "sanity.imageMetadata";
   location?: Geopoint;
@@ -355,128 +342,27 @@ export type SanityImageMetadata = {
   isOpaque?: boolean;
 };
 
-export type SanityAssistInstructionTask = {
-  _type: "sanity.assist.instructionTask";
-  path?: string;
-  instructionKey?: string;
-  started?: string;
-  updated?: string;
-  info?: string;
+export type Geopoint = {
+  _type: "geopoint";
+  lat?: number;
+  lng?: number;
+  alt?: number;
 };
 
-export type SanityAssistTaskStatus = {
-  _type: "sanity.assist.task.status";
-  tasks?: Array<{
-    _key: string;
-  } & SanityAssistInstructionTask>;
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
 };
 
-export type SanityAssistSchemaTypeAnnotations = {
-  _type: "sanity.assist.schemaType.annotations";
-  title?: string;
-  fields?: Array<{
-    _key: string;
-  } & SanityAssistSchemaTypeField>;
+export type SanityAssetSourceData = {
+  _type: "sanity.assetSourceData";
+  name?: string;
+  id?: string;
+  url?: string;
 };
 
-export type SanityAssistOutputType = {
-  _type: "sanity.assist.output.type";
-  type?: string;
-};
-
-export type SanityAssistOutputField = {
-  _type: "sanity.assist.output.field";
-  path?: string;
-};
-
-export type SanityAssistInstructionContext = {
-  _type: "sanity.assist.instruction.context";
-  reference: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "assist.instruction.context";
-  };
-};
-
-export type AssistInstructionContext = {
-  _id: string;
-  _type: "assist.instruction.context";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  context?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: null;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-};
-
-export type SanityAssistInstructionUserInput = {
-  _type: "sanity.assist.instruction.userInput";
-  message: string;
-  description?: string;
-};
-
-export type SanityAssistInstructionPrompt = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  } | {
-    _key: string;
-  } & SanityAssistInstructionFieldRef | {
-    _key: string;
-  } & SanityAssistInstructionContext | {
-    _key: string;
-  } & SanityAssistInstructionUserInput>;
-  style?: "normal";
-  listItem?: never;
-  markDefs?: null;
-  level?: number;
-  _type: "block";
-  _key: string;
-}>;
-
-export type SanityAssistInstructionFieldRef = {
-  _type: "sanity.assist.instruction.fieldRef";
-  path?: string;
-};
-
-export type SanityAssistInstruction = {
-  _type: "sanity.assist.instruction";
-  prompt?: SanityAssistInstructionPrompt;
-  icon?: string;
-  title?: string;
-  userId?: string;
-  createdById?: string;
-  output?: Array<{
-    _key: string;
-  } & SanityAssistOutputField | {
-    _key: string;
-  } & SanityAssistOutputType>;
-};
-
-export type SanityAssistSchemaTypeField = {
-  _type: "sanity.assist.schemaType.field";
-  path?: string;
-  instructions?: Array<{
-    _key: string;
-  } & SanityAssistInstruction>;
-};
-
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | Geopoint | ProjectList | Hero | FeaturedProject | RichText | Link | ContentBlocks | Settings | Project | SanityFileAsset | Page | Slug | Home | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
+export type AllSanitySchemaTypes = VideoProject | ProjectList | Hero | FeaturedProject | RichText | Link | ContentBlocks | Settings | Project | Page | Home | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
@@ -513,6 +399,7 @@ export type SettingsQueryResult = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
     };
+    media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     alt?: string;
@@ -522,7 +409,7 @@ export type SettingsQueryResult = {
   basePrompt?: string;
 } | null;
 // Variable: getHomeQuery
-// Query: *[_type == 'home'][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "hero" => {      ...,      image {  ...,  "lqip": asset->metadata.lqip}    },    _type == "featuredProject" => {      ...,      project-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip},       heroImage {  ...,  "lqip": asset->metadata.lqip}      },    },    _type == "projectList" => {      ...,      projects[]-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip}      },    },  },  }
+// Query: *[_type == 'home'][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "hero" => {      ...,      image {  ...,  "lqip": asset->metadata.lqip}    },    _type == "featuredProject" => {      ...,      project-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip},       heroImage {  ...,  "lqip": asset->metadata.lqip}      },    },    _type == "videoProject" => {      ...,      project-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip},       heroImage {  ...,  "lqip": asset->metadata.lqip}      },    },    _type == "projectList" => {      ...,      projects[]-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip}      },    },  },  }
 export type GetHomeQueryResult = {
   _id: string;
   _type: "home";
@@ -538,9 +425,10 @@ export type GetHomeQueryResult = {
       _updatedAt: string;
       _rev: string;
       title: string;
+      subtitle?: string;
       slug: Slug;
       client: string;
-      url: string;
+      url?: string;
       services?: Array<string>;
       tagline: string;
       secondaryTagline?: string;
@@ -552,6 +440,7 @@ export type GetHomeQueryResult = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
+        media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         attribution?: string;
@@ -565,6 +454,7 @@ export type GetHomeQueryResult = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
+        media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         attribution?: string;
@@ -579,6 +469,7 @@ export type GetHomeQueryResult = {
             _weak?: boolean;
             [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
           };
+          media?: unknown;
           _type: "file";
         };
         attribution?: string;
@@ -615,18 +506,8 @@ export type GetHomeQueryResult = {
       _type: "link";
       _key: string;
     }>;
-    image: {
-      asset: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-      lqip: string | null;
-    };
+    skills?: Array<string>;
+    image: null;
   } | {
     _key: string;
     _type: "projectList";
@@ -637,9 +518,10 @@ export type GetHomeQueryResult = {
       _updatedAt: string;
       _rev: string;
       title: string;
+      subtitle?: string;
       slug: Slug;
       client: string;
-      url: string;
+      url?: string;
       services?: Array<string>;
       tagline: string;
       secondaryTagline?: string;
@@ -651,6 +533,7 @@ export type GetHomeQueryResult = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
+        media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         attribution?: string;
@@ -664,6 +547,7 @@ export type GetHomeQueryResult = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
+        media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         attribution?: string;
@@ -677,6 +561,7 @@ export type GetHomeQueryResult = {
             _weak?: boolean;
             [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
           };
+          media?: unknown;
           _type: "file";
         };
         attribution?: string;
@@ -684,10 +569,72 @@ export type GetHomeQueryResult = {
       description?: string;
       prompt: RichText;
     }>;
+  } | {
+    _key: string;
+    _type: "videoProject";
+    project: {
+      _id: string;
+      _type: "project";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      title: string;
+      subtitle?: string;
+      slug: Slug;
+      client: string;
+      url?: string;
+      services?: Array<string>;
+      tagline: string;
+      secondaryTagline?: string;
+      tools: Array<string>;
+      previewImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        attribution?: string;
+        _type: "image";
+        lqip: string | null;
+      };
+      heroImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        attribution?: string;
+        _type: "image";
+        lqip: string | null;
+      } | null;
+      video?: {
+        file?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+          };
+          media?: unknown;
+          _type: "file";
+        };
+        attribution?: string;
+      };
+      description?: string;
+      prompt: RichText;
+    };
   }> | null;
 } | null;
 // Variable: getPageQuery
-// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "hero" => {      ...,      image {  ...,  "lqip": asset->metadata.lqip}    },    _type == "featuredProject" => {      ...,      project-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip},       heroImage {  ...,  "lqip": asset->metadata.lqip}      },    },    _type == "projectList" => {      ...,      projects[]-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip}      },    },  },  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  name,  slug,  "pageBuilder": pageBuilder[]{    ...,    _type == "hero" => {      ...,      image {  ...,  "lqip": asset->metadata.lqip}    },    _type == "featuredProject" => {      ...,      project-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip},       heroImage {  ...,  "lqip": asset->metadata.lqip}      },    },    _type == "videoProject" => {      ...,      project-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip},       heroImage {  ...,  "lqip": asset->metadata.lqip}      },    },    _type == "projectList" => {      ...,      projects[]-> {       ...,       previewImage {  ...,  "lqip": asset->metadata.lqip}      },    },  },  }
 export type GetPageQueryResult = {
   _id: string;
   _type: "page";
@@ -703,9 +650,10 @@ export type GetPageQueryResult = {
       _updatedAt: string;
       _rev: string;
       title: string;
+      subtitle?: string;
       slug: Slug;
       client: string;
-      url: string;
+      url?: string;
       services?: Array<string>;
       tagline: string;
       secondaryTagline?: string;
@@ -717,6 +665,7 @@ export type GetPageQueryResult = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
+        media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         attribution?: string;
@@ -730,6 +679,7 @@ export type GetPageQueryResult = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
+        media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         attribution?: string;
@@ -744,6 +694,7 @@ export type GetPageQueryResult = {
             _weak?: boolean;
             [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
           };
+          media?: unknown;
           _type: "file";
         };
         attribution?: string;
@@ -780,18 +731,8 @@ export type GetPageQueryResult = {
       _type: "link";
       _key: string;
     }>;
-    image: {
-      asset: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-      lqip: string | null;
-    };
+    skills?: Array<string>;
+    image: null;
   } | {
     _key: string;
     _type: "projectList";
@@ -802,9 +743,10 @@ export type GetPageQueryResult = {
       _updatedAt: string;
       _rev: string;
       title: string;
+      subtitle?: string;
       slug: Slug;
       client: string;
-      url: string;
+      url?: string;
       services?: Array<string>;
       tagline: string;
       secondaryTagline?: string;
@@ -816,6 +758,7 @@ export type GetPageQueryResult = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
+        media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         attribution?: string;
@@ -829,6 +772,7 @@ export type GetPageQueryResult = {
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
+        media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         attribution?: string;
@@ -842,6 +786,7 @@ export type GetPageQueryResult = {
             _weak?: boolean;
             [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
           };
+          media?: unknown;
           _type: "file";
         };
         attribution?: string;
@@ -849,6 +794,68 @@ export type GetPageQueryResult = {
       description?: string;
       prompt: RichText;
     }>;
+  } | {
+    _key: string;
+    _type: "videoProject";
+    project: {
+      _id: string;
+      _type: "project";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      title: string;
+      subtitle?: string;
+      slug: Slug;
+      client: string;
+      url?: string;
+      services?: Array<string>;
+      tagline: string;
+      secondaryTagline?: string;
+      tools: Array<string>;
+      previewImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        attribution?: string;
+        _type: "image";
+        lqip: string | null;
+      };
+      heroImage: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        attribution?: string;
+        _type: "image";
+        lqip: string | null;
+      } | null;
+      video?: {
+        file?: {
+          asset?: {
+            _ref: string;
+            _type: "reference";
+            _weak?: boolean;
+            [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+          };
+          media?: unknown;
+          _type: "file";
+        };
+        attribution?: string;
+      };
+      description?: string;
+      prompt: RichText;
+    };
   }> | null;
 } | null;
 // Variable: getProjectQuery
@@ -860,9 +867,10 @@ export type GetProjectQueryResult = {
   _updatedAt: string;
   _rev: string;
   title: string;
+  subtitle?: string;
   slug: Slug;
   client: string;
-  url: string;
+  url?: string;
   services?: Array<string>;
   tagline: string;
   secondaryTagline?: string;
@@ -874,6 +882,7 @@ export type GetProjectQueryResult = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
     };
+    media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     attribution?: string;
@@ -887,6 +896,7 @@ export type GetProjectQueryResult = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
     };
+    media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     attribution?: string;
@@ -901,6 +911,7 @@ export type GetProjectQueryResult = {
         _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
       };
+      media?: unknown;
       _type: "file";
     };
     attribution?: string;
@@ -933,8 +944,8 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"settings\"][0]": SettingsQueryResult;
-    "\n  *[_type == 'home'][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"hero\" => {\n      ...,\n      image {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n    },\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n       heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n  },\n\n  }\n": GetHomeQueryResult;
-    "\n  *[_type == 'page' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"hero\" => {\n      ...,\n      image {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n    },\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n       heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n  },\n\n  }\n": GetPageQueryResult;
+    "\n  *[_type == 'home'][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"hero\" => {\n      ...,\n      image {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n    },\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n       heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n    _type == \"videoProject\" => {\n      ...,\n      project-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n       heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n  },\n\n  }\n": GetHomeQueryResult;
+    "\n  *[_type == 'page' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  name,\n  slug,\n  \"pageBuilder\": pageBuilder[]{\n    ...,\n    _type == \"hero\" => {\n      ...,\n      image {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n    },\n    _type == \"featuredProject\" => {\n      ...,\n      project-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n       heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n    _type == \"videoProject\" => {\n      ...,\n      project-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n       heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n    _type == \"projectList\" => {\n      ...,\n      projects[]-> {\n       ...,\n       previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n      },\n    },\n  },\n\n  }\n": GetPageQueryResult;
     "\n  *[_type == 'project' && slug.current == $slug][0]{\n    ...,\n    previewImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n},\n    heroImage {\n  ...,\n  \"lqip\": asset->metadata.lqip\n}\n  }\n": GetProjectQueryResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;
     "\n  *[_type == \"project\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": ProjectsSlugsResult;

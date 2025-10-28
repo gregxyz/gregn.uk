@@ -45,9 +45,13 @@ export const hero = defineField({
       ],
     }),
     defineField({
-      name: "image",
-      type: "image",
-      validation: (rule) => rule.required().assetRequired(),
+      name: "skills",
+      type: "array",
+      of: [
+        {
+          type: "string",
+        },
+      ],
     }),
   ],
   preview: {

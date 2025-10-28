@@ -1,64 +1,179 @@
 "use client";
 
+import { horizontalLoop } from "@/app/lib/gsap-utils";
 import type { Hero as HeroProps } from "@/sanity.types";
 import { useGSAP } from "@gsap/react";
-import { ArrowElbowRightDown } from "@phosphor-icons/react";
 import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
 import { useRef } from "react";
-import { AnimateFadeUp } from "../common/AnimateFadeUp";
 import RichText from "../common/RichText";
-import SanityImage from "../common/SanityImage";
+
+gsap.registerPlugin(SplitText);
 
 function Hero({ block }: { block: HeroProps }) {
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const scrollToProjects = () => {
-    const featuredProject = document.querySelector('.featured-project');
-    if (featuredProject) {
-      featuredProject.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
+  useGSAP(
+    () => {
+      const title = containerRef.current?.querySelector(".hero-title");
+      if (!title) return;
+
+      const titleSplit = new SplitText(title, {
+        type: "chars",
+        charsClass: "split-char",
       });
-    }
-  };
 
-  useGSAP(() => {
-    if (!overlayRef.current) return;
+      const richTextDiv = containerRef.current?.querySelector(
+        ".hero-description .rich-text",
+      );
+      if (!richTextDiv) return;
 
-    const overlay = overlayRef.current;
+      const descriptionSplit = new SplitText(richTextDiv, {
+        type: "lines",
+        linesClass: "split-line",
+      });
 
-    gsap.to(overlay, {
-      width: 0,
-      duration: 1.2,
-      delay: 0.3,
-      ease: "expo.out",
-    });
-  });
+      const marqueeContainer = containerRef.current?.querySelector(
+        ".hero-marquee-container",
+      ) as HTMLElement | null;
+
+      const nav = containerRef.current?.querySelector(".hero-nav");
+      const scrollButton = containerRef.current?.querySelector(
+        ".hero-scroll-button",
+      );
+
+      gsap.set(
+        [titleSplit.chars, nav, scrollButton, marqueeContainer].filter(Boolean),
+        {
+          opacity: 0,
+          filter: "blur(8px)",
+        },
+      );
+
+      gsap.set(descriptionSplit.lines, {
+        opacity: 0,
+        filter: "blur(8px)",
+        y: 20,
+      });
+
+      const tl = gsap.timeline();
+
+      tl.to(titleSplit.chars, {
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 1.5,
+        ease: "power2.out",
+        stagger: 0.03,
+      });
+
+      tl.to(
+        descriptionSplit.lines,
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          y: 0,
+          duration: 1.2,
+          ease: "power2.out",
+          stagger: 0.15,
+        },
+        "-=1",
+      );
+
+      tl.to(
+        [nav, scrollButton, marqueeContainer].filter(Boolean),
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1,
+          ease: "power2.out",
+        },
+        "-=0.5",
+      );
+
+      const marqueeItems = gsap.utils.toArray(
+        ".hero-marquee-item",
+      ) as HTMLElement[];
+
+      if (marqueeItems.length > 0 && marqueeContainer) {
+        const splits = marqueeItems.map(
+          (item) =>
+            new SplitText(item, {
+              type: "chars",
+              charsClass: "marquee-char",
+            }),
+        );
+
+        horizontalLoop(marqueeItems, {
+          speed: 0.2,
+          repeat: -1,
+          paddingRight: 24,
+        });
+
+        const fadeDistance = 50;
+        const maxBlur = 6;
+        const containerRect = marqueeContainer.getBoundingClientRect();
+
+        gsap.ticker.add(() => {
+          for (const split of splits) {
+            for (const char of split.chars) {
+              const charRect = char.getBoundingClientRect();
+              const distanceFromLeft = charRect.left - containerRect.left;
+
+              if (distanceFromLeft < fadeDistance) {
+                const progress = Math.max(0, distanceFromLeft / fadeDistance);
+                const opacity = progress;
+                const blur = maxBlur * (1 - progress);
+                gsap.set(char, { opacity, filter: `blur(${blur}px)` });
+              } else {
+                gsap.set(char, { opacity: 1, filter: "blur(0px)" });
+              }
+            }
+          }
+        });
+      }
+    },
+    { scope: containerRef, dependencies: [block.description] },
+  );
 
   return (
-    <section className="relative flex h-svh flex-col bg-grid px-6 py-10 md:px-20 md:py-16">
-      <div className="mb-8 grid-cols-2 md:mb-0 md:grid">
-        <div className="relative z-20 mb-3 md:mb-0">
-          <AnimateFadeUp delay={0.2}>
-            <h1 className="whitespace-pre-line font-bold text-fluid-xl">
-              {block.title}
-            </h1>
-          </AnimateFadeUp>
-        </div>
-        <div className="max-w-[400px] md:ml-auto md:place-self-end md:text-right xl:max-w-[30vw]">
-          {block.description && (
-            <AnimateFadeUp delay={0.6}>
-              <RichText
-                content={block.description}
-                className=" opacity-70 md:text-md"
-              />
-            </AnimateFadeUp>
+    <div
+      ref={containerRef}
+      className="relative h-[calc(100svh-30px)] overflow-hidden py-6 pl-6 sm:py-10 sm:pl-10"
+    >
+      <div className="flex h-[calc(100%-30px)] flex-col justify-between">
+        <div className="flex flex-col gap-x-2 md:flex-row md:items-end md:justify-between">
+          <h1 className="hero-title whitespace-nowrap font-semibold text-4xl uppercase leading-[0.8] [text-box-edge:cap_alphabetic] [text-box-trim:trim-both] sm:text-6xl">
+            {block.title}
+          </h1>
+          {!!block.skills && (
+            <div className="hero-marquee-container mt-6 w-full overflow-hidden text-black md:w-[320px]">
+              <ul className="mx-5 flex gap-x-6 font-light text-xs">
+                {block.skills.map((skill) => (
+                  <li
+                    key={skill}
+                    className="hero-marquee-item whitespace-nowrap"
+                  >
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
-          {!!block.links && (
-            <AnimateFadeUp delay={0.65}>
-              <nav>
-                <hr className="mt-4 mb-1 w-7 md:mt-2 md:ml-auto" />
-                <ul className="inline-flex justify-end space-x-2 pr-1 text-xs underline opacity-50">
+        </div>
+        <div className="flex flex-row justify-between gap-y-10 pr-6 md:pr-10">
+          <div className="hero-bottom-content flex max-w-[95%] flex-col justify-between sm:max-w-[80%] md:mt-0 md:justify-end xl:max-w-[40%]">
+            {block.description && (
+              <div className="hero-description">
+                <RichText
+                  content={block.description}
+                  className="font-light text-black text-md md:text-xl"
+                />
+              </div>
+            )}
+            {!!block.links && (
+              <nav className="hero-nav">
+                <hr className="mt-5 mb-1 w-10 md:mt-8 md:mb-3" />
+                <ul className="inline-flex justify-end gap-x-4 pr-1 text-black/70 text-sm underline md:text-md">
                   {block.links.map((link) => (
                     <li key={link._key}>
                       <a href={link.url} target="_blank" rel="noreferrer">
@@ -68,46 +183,16 @@ function Hero({ block }: { block: HeroProps }) {
                   ))}
                 </ul>
               </nav>
-            </AnimateFadeUp>
-          )}
+            )}
+          </div>
+          <div className="hero-scroll-button flex items-end">
+            <button type="button" className="text-md">
+              (scroll)
+            </button>
+          </div>
         </div>
       </div>
-      <div className="relative z-10 flex h-full flex-col md:flex-row md:justify-between">
-        <div className="md:-ml-10 md:-mt-15 lg:-mt-10 relative size-full min-w-[200px] shrink-0 overflow-hidden md:h-[75vh] md:w-[18vw]">
-          <div
-            ref={overlayRef}
-            className="absolute right-0 z-20 size-full bg-white"
-          />
-          <SanityImage
-            image={block.image}
-            alt=""
-            fill={true}
-            className="size-full object-cover"
-          />
-          <button
-            type="button"
-            onClick={scrollToProjects}
-            className="before:-z-10 absolute right-0 bottom-0 z-10 flex w-[90%] cursor-pointer justify-between gap-x-2 py-2 pl-4 text-left before:absolute before:inset-x-0 before:bottom-0 before:size-full before:bg-white before:transition-height before:duration-300 hover:before:h-[60%]"
-          >
-            <span className="text-white mix-blend-difference">
-              View projects
-            </span>
-            <ArrowElbowRightDown
-              size={26}
-              className="text-white mix-blend-difference"
-            />
-          </button>
-        </div>
-        <div className="@container hidden w-full justify-end self-end md:flex">
-          <AnimateFadeUp delay={0.35}>
-            <h2 className="whitespace-pre-line text-right font-bold text-[16cqw] leading-[14cqw] tracking-[0.5vw]">
-              {block.titleLarge}
-            </h2>
-          </AnimateFadeUp>
-        </div>
-      </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-5 h-[120px] bg-linear-to-t from-white to-transparent" />
-    </section>
+    </div>
   );
 }
 

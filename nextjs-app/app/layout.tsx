@@ -10,6 +10,7 @@ import { SanityLive, sanityFetch } from "@/sanity/lib/live";
 import { settingsQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 import { Lexend } from "next/font/google";
+import localFont from "next/font/local";
 import { handleError } from "./client-utils";
 
 /**
@@ -52,6 +53,12 @@ const lexend = Lexend({
   variable: "--font-lexend",
 });
 
+const authorFont = localFont({
+  src: "./assets/fonts/Author-Variable.woff2",
+  variable: "--font-author",
+  display: "swap",
+});
+
 export default async function RootLayout({
   children,
 }: {
@@ -60,7 +67,10 @@ export default async function RootLayout({
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
-    <html lang="en" className={`bg-white text-black ${lexend.variable}`}>
+    <html
+      lang="en"
+      className={`bg-white text-black ${lexend.variable} ${authorFont.variable}`}
+    >
       <body>
         <section className="min-h-screen">
           {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
