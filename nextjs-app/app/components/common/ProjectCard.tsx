@@ -1,66 +1,19 @@
 "use client";
+
 import type { Project as ProjectProps } from "@/sanity.types";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-import { useRef } from "react";
 import { unstable_ViewTransition as ViewTransition } from "react";
-import { AnimateFadeUp } from "./AnimateFadeUp";
 import SanityImage from "./SanityImage";
 
-gsap.registerPlugin(ScrollTrigger);
-
-function ProjectCard({
-  card,
-  animationDelay = 0,
-}: { card: ProjectProps; animationDelay?: number }) {
-  const containerRef = useRef<HTMLAnchorElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    if (!containerRef.current || !overlayRef.current) return;
-
-    const overlay = overlayRef.current;
-    const mm = gsap.matchMedia();
-    const breakPoint = 768;
-
-    mm.add(
-      {
-        isDesktop: `(min-width: ${breakPoint}px)`,
-        isMobile: `(max-width: ${breakPoint - 1}px)`,
-      },
-      (context) => {
-        const { isDesktop } = context.conditions as {
-          isDesktop: boolean;
-          isMobile: boolean;
-        };
-        const delay = isDesktop ? animationDelay + 0.1 : 0;
-
-        gsap.to(overlay, {
-          height: 0,
-          duration: 0.6,
-          delay,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 90%",
-          },
-        });
-      },
-    );
-  }, [animationDelay]);
+function ProjectCard({ card }: { card: ProjectProps }) {
+  const slug = `/project/${card.slug.current}`;
 
   return (
-    <Link
-      ref={containerRef}
-      href={`/project/${card.slug.current}`}
-      className="group relative flex h-full flex-col border-black/10 before:absolute before:top-0 before:left-0 before:z-1 before:h-0.25 before:w-0 before:bg-[#000] before:transition-all before:duration-200 hover:before:w-full sm:border-t sm:pt-4"
-    >
-      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 px-6 sm:px-0">
-        <AnimateFadeUp delay={animationDelay}>
-          <h3 className="shrink-0">{card.title}</h3>
-        </AnimateFadeUp>
-        <AnimateFadeUp delay={animationDelay + 0.1}>
+    <div className="grid grid-cols-1 gap-x-10 md:grid-cols-2">
+      <div className="grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-y-10 px-6 md:px-0">
+        <div>
+          <h3 className="text-2xl">{card.title}</h3>
           <ul className="flex text-[10px] uppercase opacity-30">
             {card.tools.map((tool) => (
               <li key={tool} className="last:[&_span:last-child]:hidden">
@@ -69,30 +22,41 @@ function ProjectCard({
               </li>
             ))}
           </ul>
-        </AnimateFadeUp>
-      </div>
-      <div className="mt-auto h-[420px] w-full bg-grey-900 px-6 py-10 transition-colors duration-400 group-hover:bg-grey-600/5 sm:p-10">
-        <div className="relative size-full overflow-hidden rounded-[2px]">
-          {card.previewImage && (
-            <ViewTransition
-              name={`project-image-${card.slug.current}`}
-              share="project-image-share"
-            >
-              <SanityImage
-                image={card.previewImage}
-                alt=""
-                fill={true}
-                className="size-full object-cover"
-              />
-            </ViewTransition>
-          )}
-          <div
-            ref={overlayRef}
-            className="pointer-events-none absolute inset-0 size-full bg-grey-900"
-          />
+        </div>
+        <div className="self-center sm:justify-self-center md:justify-self-start">
+          <p className="max-w-[270px] font-heading text-3xl text-rich-black">
+            {card.description}
+          </p>
+        </div>
+        <div className="self-end text-right">
+          <Link
+            href={slug}
+            className="link-hover-reverse link-hover-reverse--dark inline-flex items-center gap-x-1 text-sm"
+          >
+            <span>View project</span>
+            <ArrowRight size={12} />
+          </Link>
         </div>
       </div>
-    </Link>
+      <Link
+        href={slug}
+        className="relative order-first mb-5 h-[420px] w-full md:order-last md:mb-0"
+      >
+        {card.previewImage && (
+          <ViewTransition
+            name={`project-image-${card.slug.current}`}
+            share="project-image-share"
+          >
+            <SanityImage
+              image={card.previewImage}
+              alt=""
+              fill={true}
+              className="size-full object-cover"
+            />
+          </ViewTransition>
+        )}
+      </Link>
+    </div>
   );
 }
 

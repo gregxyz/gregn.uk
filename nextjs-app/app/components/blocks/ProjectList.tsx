@@ -9,14 +9,14 @@ interface Props {
 
 function ProjectList({ block }: Props) {
   return (
-    <section className="pt-15 pb-20 md:pt-20">
-      <div className="grid grid-cols-6 gap-12 sm:px-10">
-        {block.projects?.map((project, index) => (
+    <section className="mt-20 pb-20 md:px-10">
+      <div className="space-y-5">
+        {block.projects?.map((project) => (
           <div
             key={project._id}
-            className="col-span-6 md:col-span-3 xl:col-span-2"
+            className="not-last:mb-20 border-b border-b-black/10 pb-5 md:border-black/10 md:border-t md:border-b-0 md:pt-5 md:pb-0"
           >
-            <ProjectCard card={project} animationDelay={index * 0.3} />
+            <ProjectCard card={project} />
           </div>
         ))}
       </div>
